@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Register.css') }}">
+</head>
+
+<body>
+    <div class="top">
+
+        <ul>
+            <li style="float:left;"><a href="HomePage">Home</a></li>
+            <li style="float: left;"><a href="#about">About</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <a href='TeacherSignUp'><img src="{{ url_for('static', filename='teacher.png') }}" style="width:250px; height: 300px;"></a>
+        <div class="container">
+            <a href='TeacherSignUp'>
+                <p>Teacher</p>
+            </a>
+        </div>
+    </div>
+    <div class="card1">
+        <a href='StudentSignUp'><img src="{{ url_for('static', filename='student.png') }}" style="width:250px; height: 300px;"></a>
+        <div class="container">
+            <a href='StudentSignUp'>
+                <p>Student</p>
+            </a>
+        </div>
+    </div>
+    </form>
+</body>
+
+</html>

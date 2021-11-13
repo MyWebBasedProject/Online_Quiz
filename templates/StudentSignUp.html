@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Student SignUp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='StudentSignUp.css') }}">
+
+</head>
+
+<body>
+
+
+    <div class="top">
+
+        <ul>
+            <li style="float:left;"><a href="HomePage">Home</a></li>
+            <li style="float: left;"><a href="#about">About</a></li>
+        </ul>
+    </div>
+    <div class="alert alert-success">
+        <strong>{{ message }}</strong>
+    </div>
+
+    <div class="Form">
+
+        <form name="SignUpForm" onsubmit="return validateForm()" action="StudentSignUp" enctype="multipart/form-data" method="POST">
+
+            <input type="text" id="first_name" name="first_name" placeholder="First Name">
+
+            <input style="float: right; margin:-3.8rem 12px ;" type="text" id="last_name" name="last_name" placeholder="Last Name"><br>
+
+            <input type="text" id="middle_name" name="middle_name" placeholder="Middle Name"><br>
+
+            <input type="date" id="dob" name="dob"><br>
+            <input style="float: right;margin:-4.6rem 0.8rem;" type="text" id="age" name="age" placeholder="Age">
+
+            <input type="email" id="email" name="email" placeholder="Email ID"><br>
+
+            <input type="password" id="password" name="password" placeholder="password">
+            <input style="float: right;margin:-3.8rem 12px;" type="password" id="Confirm_password" name="Confirm_password" placeholder="Confirm password">
+
+
+            <label for="branch"><p class="text" style="font-size: 110%;display: inline-block;">Branch:</p></label>
+            <select style="float: right;margin:-2.8rem 20rem ;" id="branch" name="branch">
+                <option value="select">Select</option>
+                <option value="Electrical Engineering">(EE) Electrical Engineering</option>
+                <option value="Electronics and Telecommunication Engineering">(EXTC) Electronics and Telecommunication Engineering</option>
+                <option value="Civil Engineering">(CE) Civil Engineering(CE)</option>
+                <option value="Computer Science & Engineering">(CS) Computer Science & Engineering</option>
+                <option value="Information and Technology">(IT) Information and Technology</option>
+                <option value="Mechanical Engineering">(ME) Mechanical Engineering</option>
+            </select>
+
+            <input style="float:right;margin:-2.9rem 0.8rem ;" type="text" id="sem" name="semester" placeholder="Semester">
+            <br><br>
+            <label><p class="text">Upload Your Profile Image: </label>
+            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" multiple size="1">
+
+            <br>
+            <div class="err_msg" style="text-align: center;">{{ msg }}</div>
+            <input type="submit" value="Submit" name="submit">
+        </form>
+    </div>
+</body>
+
+</html>

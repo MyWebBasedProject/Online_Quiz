@@ -125,7 +125,6 @@ def gaze_calcualtion(backenInstance ,frame, gray, landmarks):
     right_eye = [42,43,44,45,46,47]
     left_l, center_l, right_l = gaze_detection(left_eye, landmarks, frame, gray)
     left_r, center_r, right_r = gaze_detection(right_eye, landmarks, frame, gray)
-
     left = left_l + left_r
     center = center_l + center_r
     right = right_l + right_r

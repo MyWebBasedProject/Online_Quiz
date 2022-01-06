@@ -128,7 +128,7 @@ def TeacherSignUp():
 				(id, profile_pic, first_name, last_name, middle_name, dob, age, email, password, ))
 				mysql.connection.commit()
 				msg = '%s %s, you have successfully registered ! Your Id is %s'%(first_name,last_name,id)
-				return render_template('HomePage.html', msg=msg)
+				return redirect(url_for("login"))
 	return render_template('TeacherSignUp.html', msg=msg)
 
 @app.route('/StudentSignUp', methods =['GET', 'POST'])
@@ -174,7 +174,7 @@ def StudentSignUp():
 				(id, profile_pic, first_name, last_name, middle_name, dob, age, email, password, branch, semester, ))
 				mysql.connection.commit()
 				msg = '%s %s, you have successfully registered ! Your Id is %s'%(first_name,last_name,id)
-				return render_template('HomePage.html', msg=msg)
+				return redirect(url_for("login"))
 	return render_template('StudentSignUp.html', msg=msg)
 
 @app.route('/student', methods=['GET', 'POST'])
@@ -182,9 +182,8 @@ def student():
 	email = session['email']
 	firstname = session['first_name']
 	profilepic = session['profile_pic']
-	msg = 'Welcome, %s'%(firstname)
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-	return render_template('student.html', msg =msg, details = profilepic)
+	return render_template('student.html', details = profilepic)
 
 @app.route('/teacher', methods=['GET', 'POST'])
 def teacher():
@@ -199,7 +198,7 @@ def QCreate():
 	teacher_id = session['id']
 	code = ''.join(random.choices(string.ascii_uppercase + string.digits , k = 4))
 	session['code']=code
-	if request.method == "POST" and 'title' in request.form and 'branch' in request.form and 'sem' in request.form and 'subject' in request.form and 'password' in request.form and 'questions' in request.form and 'duration' in request.form and 'date' in request.form and 'start_time' in request.form:
+	if request.method == "POST" and 'title' in request.form and 'branch' in request.form and 'sem' in request.form and 'subject' in request.form and 'questions' in request.form and 'duration' in request.form and 'date' in request.form and 'start_time' in request.form:
 		title = request.form['title']
 		session['title'] = title
 		branch = request.form['branch']
@@ -208,8 +207,6 @@ def QCreate():
 		session['sem'] = sem
 		subject = request.form['subject']
 		session['subject'] = subject
-		password = request.form['password']
-		session['password'] = password
 		questions = request.form['questions']
 		session['questions'] = questions
 		duration = request.form['duration']
@@ -218,30 +215,24 @@ def QCreate():
 		session['date'] = date
 		start_time = request.form['start_time']
 		session['start_time'] = start_time
-		if not title or not branch or not sem or not subject or not password or not questions or not duration or not date or not start_time:
+		if not title or not branch or not sem or not subject or not questions or not duration or not date or not start_time:
 			msg = "Please fill out the form"
 			return render_template('QCreate.html',id=teacher_id, code=code, msg = msg)
 		else:
 			cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 			cursor.execute("CREATE TABLE IF NOT EXISTS "+ code +
-			"""(question_code varchar(100) NOT NULL PRIMARY KEY, 
+			"""(question_code varchar(100) PRIMARY KEY, 
 				question varchar(1000), 
 				image varchar(1000), 
 				option_1 varchar(1000), 
 				option_2 varchar(1000), 
 				option_3 varchar(1000), 
 				option_4 varchar(1000), 
-				answer varchar(1000)) 
-				ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;""")
+				answer varchar(1000))""")
 			mysql.connection.commit()
-			cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, % s, % s, %s, %s)', 
-			(code, teacher_id, title, branch, sem, subject, password, questions, duration, date, start_time, ))
+			cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, % s, %s, %s)', 
+			(code, teacher_id, title, branch, sem, subject, questions, duration, date, start_time, ))
 			mysql.connection.commit()
-			cursor.execute("SELECT id FROM student where branch = %s and semester = %s",(branch ,sem, ))
-			row = cursor.fecthall()
-			for id in row:
-				student = id
-				cursor.execute("ALTER TABLE %s ADD COLUMN %s varchar(1000)",(code, student, ))
 			return redirect(url_for("Quiz"))
 	return render_template('Qcreate.html', id=teacher_id, code=code)
 
@@ -282,20 +273,29 @@ def Quiz():
 			msg = "Please fill out the form"
 			return render_template('Quiz.html', msg=msg)
 		else:
-			cursor.execute('INSERT INTO quiz_exam VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
-			(code, question_code, question, image, option_1, option_2, option_3, option_4, answer, ))
+			table = str(code)
+			table = str.lower(code)
+			cursor.execute('INSERT INTO '+table+' VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+			(question_code, question, image, option_1, option_2, option_3, option_4, answer, ))
 			mysql.connection.commit()
-			rows = cursor.execute('select * from quiz_exam where code=%s',(code, ))
+			rows = cursor.execute('select * from '+table)
 			if (rows >= n):
+				cursor.execute("SELECT * FROM student where branch = %s and semester = %s",(session['branch'] ,session['sem'], ))
+				id = cursor.fetchall()
+				for row in id:
+					student = row['id']
+					cursor.execute("ALTER TABLE "+table+" ADD %sA varchar(1000) after answer",(student, ))
+					mysql.connection.commit()
 				msg = "Quiz for "+session['subject']+" has been Schedule on "+session['date']
-				cursor.execute("SELECT email FROM student where branch = %s and semester = %s",(session['branch'] ,session['sem'], ))
+				cursor.execute("SELECT * FROM student where branch = %s and semester = %s",(session['branch'] ,session['sem'], ))
 				recipient = cursor.fetchall()
-				quiz = Message(subject = msg,
+				for email in recipient:
+					quiz = Message(subject = msg,
 								sender = "onlinequizexamination@gmail.com",
-								recipients = [recipient])
-				quiz.body = "This is to inform you that quiz has been created for "+session['subject']+" on "+session['date']+". Test details are as follows : \r\n Subject: "+session['subject']+"\r\n Title: "+session['title']+"\r\n Quiz Code: "+session['code']+"\r\n Password: "+session['password']+"\r\n Date :"+session['date']+"\r\n Duration :"+session['duration']+"\r\n Start Time: "+session['start_time'] 
-				mail.send(quiz)
-				return render_template('teacher.html', msg=msg, details= profile_pic)
+								recipients = [email['email']])
+					quiz.body = "This is to inform you that quiz has been created for "+session['subject']+" on "+session['date']+". Test details are as follows : \r\n Subject: "+session['subject']+"\r\n Title: "+session['title']+"\r\n Quiz Code: "+session['code']+"\r\n Date :"+session['date']+"\r\n Duration :"+session['duration']+"\r\n Start Time: "+session['start_time'] 
+					mail.send(quiz)
+				return redirect(url_for('teacher'))
 	return render_template('Quiz.html', msg=msg, n=n)
 
 @app.route('/StartQuiz', methods=['GET', 'POST'])

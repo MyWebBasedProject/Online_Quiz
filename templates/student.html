@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard</title>
+    <title>Student</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='StudentDash.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,28 +12,17 @@
 </head>
 
 <body>
-
-    <div id="mySidenav" class="sidenav">
-        <br>
-        <p style="text-align: center;">{{msg}}</p>
-        <br>
+    <div class="sidenav">
+        <br><br>
         <div class="card"><img src="{{details}}" style="width:205px; height: 250px;"></div>
-        <div style="margin: 5rem -1rem;">
-            <a href="#">Attempt Quiz</a>
+        <div style="margin: 6.5rem -1rem;">
+            <a href="#">Upcoming Quiz</a>
+            <a href="http://127.0.0.1:5000/StartQuiz">Start Quiz</a>
             <a href="#">View Results</a>
             <a href="http://127.0.0.1:5000/logout">Logout</a>
         </div>
-    </div>
+    </div>>
 
-    <p>Dashboard</p>
-
-    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
-
-    <script>
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "250px";
-        }
-    </script>
 </body>
 
 </html>

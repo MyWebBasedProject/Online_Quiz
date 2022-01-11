@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_socketio import SocketIO
-import socketio
 from flask_mysqldb import MySQL
 
 

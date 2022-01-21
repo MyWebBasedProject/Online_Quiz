@@ -3,6 +3,7 @@ from onlineexam import mydb
 #     "CREATE TABLE temp_report (report_id  int, message varchar(50) NOT NULL, screenshot blob) "
 # )
 
+
 class BackendOperations:
     def digital_to_binary(self, image_name):
         with open(image_name, 'rb') as file:
@@ -16,9 +17,9 @@ class BackendOperations:
             #picture = self.digital_to_binary(image_name)
 
             #cursor.execute('INSERT INTO temp_report(message, screenshot) VALUES (%s, %s)', (msg, image_name, ))
-            #mydb.connection.commit()
+            # mydb.connection.commit()
             #print("Record Inserted")
-        
+
         except Exception as error:
             print("The error occured  is {}".format(error))
 

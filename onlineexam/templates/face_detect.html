@@ -8,20 +8,42 @@
 {% endblock %}
 
 {% block body %}
-<p id="message"></p><br>
-<input type="button" id="startButton" value="Start app">
+<p id="faces"></p><br>
+<p id="mobile"></p><br>
+<p id="person"></p><br>
+<p id="eye"></p><br>
+<p id="face_oreintation"></p><br>
+<p id="correct_person"></p><br>
+<input type="button" id="startButton" value="Start app"></br>
+<input type="button" id="endExamButton" value="End exam">
 
 <script type="text/javascript">
     $(document).ready(function(){
         var socket = io.connect('http://127.0.0.1:5000/')
         
-        socket.on('yolo_event',function(msg){
-           document.getElementById("message").innerHTML = "Number of faces: " + msg;
+        socket.on('detect_person_mobile',function(person, mobile, correct_person){
+           document.getElementById("mobile").innerHTML = "Number of Mobiles: " + mobile;
+           document.getElementById("person").innerHTML = "Number of Persons: " + person;
+           document.getElementById("correct_person").innerHTML = "Correct Person: " + correct_person;
+        });
+    
+        socket.on('violation',function(faces, eye, face_orinetation){
+            console.log(face_orinetation)
+            console.log(eye)
+           document.getElementById("faces").innerHTML = "Number of Faces: " + faces;
+           document.getElementById("face_oreintation").innerHTML = "Face Oreintation: " + face_orinetation;
+           document.getElementById("eye").innerHTML = "Eye Direction: " + eye;
         });
 
         $("#startButton").on('click',function(){
-            socket.emit('yolo_event');
+            socket.emit('violation')
         });
+
+        $('#endExamButton').on('click',function(){
+            socket.emit('close_camera');
+        });
+
+
         
     });
 </script>

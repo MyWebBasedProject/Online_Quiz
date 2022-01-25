@@ -6,13 +6,14 @@ import threading
 import numpy as np
 import math
 from flask_socketio import emit
-from flask import render_template, request
+from flask import render_template
 from onlineexam import app, socketio, backend
 
 cap = cv2.VideoCapture(0)
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
+violation_done = 0
 correct_person = [False]
 persons = 0
 mobiles = 0
@@ -47,12 +48,6 @@ def check_correct_person(frame):
             frame, face_locations)
         correct_person = face_recognition.compare_faces(
             refEncode, face_encodes)
-
-
-@app.route("/face_detect", methods=["POST"])
-def faceDetect():
-    if request.method == "POST":
-        return render_template("face_detect.html")
 
 
 def get_midpoint(pointa, pointb):
@@ -127,32 +122,38 @@ def gaze_detection(eyePoint, landmarks, frame, gray):
 
 
 def get_slopes(pointA, pointB):
-    if pointB[0] != pointA[0]:
-        return (pointB[1] - pointA[1])/(pointB[0] - pointA[0])
+    if pointB[1] != pointA[1]:
+        return (pointB[0] - pointA[0])/(pointB[1] - pointA[1])
 
 
 def face_orientation(backendInstance, frame, landmarks):
-    global face_direction
+    global face_direction, violation_done
     nose_region = nose_area([27, 28, 29, 30, 33], landmarks)
     # print(np.size(nose_region))
     m1 = get_slopes([landmarks.part(27).x, landmarks.part(27).y], [
                     landmarks.part(30).x, landmarks.part(30).y])
     m2 = get_slopes([landmarks.part(30).x, landmarks.part(30).y], [
                     landmarks.part(33).x, landmarks.part(33).y])
-    cv2.polylines(frame, [nose_region], False, (0, 0, 0))
+    cv2.arrowedLine(frame, (landmarks.part(30).x, landmarks.part(
+        30).y), (landmarks.part(27).x, landmarks.part(27).y), (255, 0, 0))
+    cv2.arrowedLine(frame, (landmarks.part(30).x, landmarks.part(
+        30).y), (landmarks.part(33).x, landmarks.part(33).y), (255, 0, 0))
     if m1 != None and m2 != None:
         angle_r = math.atan((m2 - m1 / (1 + (m1 * m2))))
         angle_d = round(math.degrees(angle_r))
+        angle_d = 180 - angle_d
         cv2.putText(frame, str(angle_d), (300, 100),
                     cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
-        if angle_d <= 65 and angle_d > 0:
+        if angle_d < 160:
             face_direction = "left side"
+            violation_done += 1
             cv2.putText(frame, "Left Side", (100, 100),
                         cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
             # backendInstance.insert_message('Face Left Side', frame)
             return False
-        elif angle_d >= -65 and angle_d < 0:
+        elif angle_d > 200:
             face_direction = "right side"
+            violation_done += 1
             cv2.putText(frame, "Right Side", (100, 100),
                         cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
             # backendInstance.insert_message('Face Right Side', frame)
@@ -165,7 +166,7 @@ def face_orientation(backendInstance, frame, landmarks):
 
 
 def gaze_calcualtion(backenInstance, frame, gray, landmarks):
-    global eye_direction
+    global eye_direction, violation_done
     left_eye = [36, 37, 38, 39, 40, 41]
     right_eye = [42, 43, 44, 45, 46, 47]
     left_l, center_l, right_l = gaze_detection(
@@ -178,10 +179,12 @@ def gaze_calcualtion(backenInstance, frame, gray, landmarks):
 
     if left < right and left < center:
         eye_direction = "left"
+        violation_done += 1
         cv2.putText(frame, "Eye: Left", (50, 200),
                     cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
         # backenInstance.insert_message('Looking Left', frame)
     elif right < left and right < center:
+        violation_done += 1
         eye_direction = "right"
         cv2.putText(frame, "Eye: Right", (50, 200),
                     cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 3)
@@ -198,10 +201,10 @@ def face_area(frame, x1, y1, x2, y2):
 
 
 def detect_person_mobile():
-    global last_time, persons, mobiles, canbreak, correct_person
+    global last_time, persons, mobiles, canbreak, correct_person, violation_done
     str_correct_person = True
     while True:
-        if correct_person[0]==True:
+        if correct_person[0] == True:
             str_correct_person = True
         else:
             str_correct_person = False
@@ -252,12 +255,17 @@ def detect_person_mobile():
                         persons += 1
                     if class_ids[i] == 67:
                         mobiles += 1
+
                     x, y, w, h = boxes[i]
                     label = str(classes_names[class_ids[i]])
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
                     cv2.putText(
                         frame, label + ": " + str(class_ids[i]), (x, y+40), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 0), 1)
 
+            if persons != 1:
+                violation_done += 1
+            if mobiles != 0:
+                violation_done += 1
             cv2.putText(frame, str(face_count), (50, 100),
                         cv2.FONT_HERSHEY_COMPLEX, 3, (0, 255, 255))
             cv2.imshow("person mobile", frame)
@@ -267,20 +275,17 @@ def detect_person_mobile():
 
             socketio.emit('detect_person_mobile',
                           (persons, mobiles, str_correct_person))
-        if cv2.waitKey(300) & canbreak == True:
+        if cv2.waitKey(3000) & canbreak == True:
             break
 
-
-# def emit_violation():
-#     emit('violation', (face_count, eye_direction, face_direction))
-
-
 # @socketio.on('check_violation')
+
+
 def violation():
     # Model
+    global violation_done
     last_time = 0
     backendInstance = backend.BackendOperations()
-
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format
 
@@ -306,11 +311,11 @@ def violation():
                             cv2.putText(frame, str(correct_person), (50, 100),
                                         cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255))
                             if correct_person[0]:
-
                                 if face_orientation(backendInstance, frame, landmarks):
                                     gaze_calcualtion(
                                         backendInstance, frame, gray, landmarks)
                             else:
+                                violation_done += 1
                                 cv2.putText(frame, "Wrong Person", (50, 100),
                                             cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255))
                         elif face_perimenter < 400:
@@ -332,8 +337,9 @@ def violation():
             cv2.imshow("violation", frame)
             socketio.emit('violation', (face_count,
                           eye_direction, face_direction))
+            socketio.emit('number_of_violation', (violation_done))
         global canbreak
-        if cv2.waitKey(1) & canbreak == True:
+        if cv2.waitKey(1000) & canbreak == True:
             break
 
 
@@ -344,6 +350,7 @@ def start_violation():
 
     t1.start()
     t2.start()
+
     t1.join()
     t2.join()
 

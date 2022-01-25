@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block body %}
+<p id="violation"></p>
 <p id="faces"></p><br>
 <p id="mobile"></p><br>
 <p id="person"></p><br>
@@ -30,9 +31,13 @@
         socket.on('violation',function(faces, eye, face_orinetation){
             console.log(face_orinetation)
             console.log(eye)
-           document.getElementById("faces").innerHTML = "Number of Faces: " + faces;
-           document.getElementById("face_oreintation").innerHTML = "Face Oreintation: " + face_orinetation;
-           document.getElementById("eye").innerHTML = "Eye Direction: " + eye;
+            document.getElementById("faces").innerHTML = "Number of Faces: " + faces;
+            document.getElementById("face_oreintation").innerHTML = "Face Oreintation: " + face_orinetation;
+            document.getElementById("eye").innerHTML = "Eye Direction: " + eye;
+        });
+
+        socket.on('number_of_violation', function(no_violation){
+            document.getElementById("violation").innerHTML = "Number  Of Violations Performed: " + no_violation;
         });
 
         $("#startButton").on('click',function(){

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Test.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="top">
+        <br>
+        <div class="Form">
+            <form name="QuizForm" onsubmit="return validateForm()">
+                <ul>
+                    <li style="float:left;padding: 10px;
+                    color: #FFFFFF;
+                    font-family: Verdana, sans-serif, Arial;
+                    font-size: 25px;
+                    font-weight: bold;
+                    text-decoration: none;">
+                        <div id="Timer"></div>
+                    </li>
+                    <li style="margin: -3rem 45rem;"><input type="submit" value="Submit" name="submit"></a>
+                    </li>
+
+                </ul>
+                <br><br><br> <br><br><br> <br><br><br> <br>
+                <label><p style=" display: inline-block;font-size: 23px;">Q.</p></label><br><br><br><br>
+
+                <input type="radio" name="option" value="???">
+                <label><p2 style="margin:-1.3rem 3rem;">Option 1 </p2></label><br><br>
+                <input type="radio" name="option" value="???">
+                <label><p2 style="margin:-1.3rem 3rem;">Option 2</p2></label><br> <br>
+                <input type="radio" name="option" value="???">
+                <label><p2 style="margin:-1.3rem 3rem;">Option 3 </p2></label><br><br>
+                <input type="radio" name="option" value="???">
+                <label><p2 style="margin:-1.3rem 3rem;">Option 4</p2></label><br><br>
+                <br><br><br><br><br><br>
+
+                <input type="submit" id="previous" style="margin: 0rem 3rem; " value="Previous Question">
+                <input type="submit" id="next" style="margin:0rem -33rem;" value="Next Question">
+            </form>
+        </div>
+
+</body>
+
+</html>

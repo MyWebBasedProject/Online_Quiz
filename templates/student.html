@@ -17,12 +17,22 @@
         <div class="card"><img src="{{details}}" style="width:205px; height: 250px;"></div>
         <div style="margin: 6.5rem -1rem;">
             <a href="#">Upcoming Quiz</a>
-            <a href="http://127.0.0.1:5000/StartQuiz">Start Quiz</a>
+            <a href="http://127.0.0.1:5000/student/StartQuiz" onclick="return popitup('http://127.0.0.1:5000/student/StartQuiz')">Start Quiz</a>
             <a href="#">View Results</a>
             <a href="http://127.0.0.1:5000/logout">Logout</a>
         </div>
     </div>>
 
 </body>
+
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        newwindow = window.open(url, 'name', 'height=11000,width=11000');
+        if (window.focus) {
+            newwindow.focus()
+        }
+        return false;
+    }
+</script>
 
 </html>

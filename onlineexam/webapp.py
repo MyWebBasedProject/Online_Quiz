@@ -1,5 +1,5 @@
 from flask import render_template, request
-from onlineexam import app
+from onlineexam import app, viewReport
 
 
 @app.route("/")
@@ -12,3 +12,11 @@ def home():
 def faceDetect():
     if request.method == "POST":
         return render_template("face_detect.html")
+
+
+@app.route("/view_report", methods=["POST"])
+def view_report_template():
+    if request.method == "POST":
+        view_report = viewReport.getViolationCount()
+        print(view_report)
+        return render_template("view_report.html")

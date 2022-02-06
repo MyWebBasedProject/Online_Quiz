@@ -9,5 +9,5 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'exam'
 
-socketio = SocketIO(app)
 mydb = MySQL(app)
+socketio = SocketIO(app)

@@ -1,9 +1,50 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Your Report</title>
-
+    <title>Your Report</title>
 {% endblock %}
+
+
 {% block body %}
     <h1>View Report</h1>
+    <table class="record-table">
+        <thead>
+          <tr>
+            <th>Message</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+<script type="text/javascript">
+        $(document).ready(function(){
+        console.log("ready function");
+
+            function showViolations()
+            {
+                console.log("Called Show Violations");
+                event.preventDefault();
+                $.ajax({
+                    url:"/show_records_and_images",
+                    type:"POST",
+                    success: function(data)
+                    {
+                        console.log(Object.keys(data).length);
+                        for(var key in data)
+                        {
+                            console.log(data[key]["image"]);
+
+                            $(".record-table tbody").append("<tr><td>" + data[key]['message'] + "</td><td>" + data[key]['time'] + "</td><td> " + "<img src=" + data[key]['image'] + " width= 100px height= 100px;>" + "</td></tr>");
+                        }
+                        
+                    }
+                });
+            }
+
+            showViolations();
+        });
+</script>
 {% endblock %}

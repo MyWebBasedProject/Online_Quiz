@@ -15,3 +15,10 @@ def getViolationCount():
     violations.append(cursor.fetchone())
     cursor.close()
     return violations
+
+def getVioaltionAndImage():
+    cursor = mydb.connection.cursor()
+    cursor.execute('SELECT * FROM temp_report where 1')
+    violation = cursor.fetchall()
+    cursor.close()
+    return violation

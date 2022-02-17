@@ -51,8 +51,7 @@ def insert_Image(backendInstance, message, frame, mydb):
             message_path+=i
 
     path = "static/temp_report/"+ str(message_path)+"/" +str(img_count)+".png"
-    print(path)
-    print(cv2.imwrite("onlineexam/" + path,frame))
+    cv2.imwrite("onlineexam/" + path,frame)
     backendInstance.insert_message(message, path, mydb)
     img_count+=1
 
@@ -272,7 +271,7 @@ def detect_person_mobile(backendInstance):
                     cv2.putText(
                         frame, label + ": " + str(class_ids[i]), (x, y+40), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 0), 1)
 
-            if persons != 1:
+            if persons > 1:
                 violation_done += 1
                 insert_Image(backendInstance, 'Multiple Person Detected', frame, mydb)
             if mobiles != 0:

@@ -27,22 +27,38 @@
 
     function showViewButton()
     {
-        var x = document.getElementById("#viewExamButton");
         $("#viewExamButton").show();
         $("#endExamButton").hide();
     }
+
     $(document).ready(function(){
+
+        function takeScreenShot()
+        {
+            $.ajax({
+                url: "/take_screenShot",
+                type: "POST",
+                data: {'count': count},
+                success: function(data)
+                {
+                    
+                }
+            });
+        }
+
         var socket = io.connect('http://127.0.0.1:5000/')
 
         console.log(socket);
-        //console.log(document.visibilityState);
 
         document.addEventListener('visibilitychange', function(e) {
-        if(document.hidden == false)
-        {
-            count = count + 1;
-            document.getElementById("canSee").innerHTML = "Number of times application switched: " + count;
-        }
+            if(document.visibilityState === "hidden" || !document.hasFocus())
+            {
+                console.log(document.hasFocus());
+                takeScreenShot();
+                count = count + 1;
+                document.getElementById("canSee").innerHTML = "Number of times application switched: " + count;
+
+            }
         });
 
         socket.on('detect_person_mobile',function(person, mobile, correct_person){
@@ -54,8 +70,8 @@
 
 
         socket.on('violation',function(faces, eye, face_orinetation){
-            console.log(face_orinetation)
-            console.log(eye)
+            //console.log(face_orinetation)
+            //console.log(eye)
             document.getElementById("faces").innerHTML = "Number of Faces: " + faces;
             document.getElementById("face_oreintation").innerHTML = "Face Oreintation: " + face_orinetation;
             document.getElementById("eye").innerHTML = "Eye Direction: " + eye;

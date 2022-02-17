@@ -5,7 +5,6 @@ from flask_mysqldb import MySQL,MySQLdb
 from werkzeug.utils import secure_filename
 import MySQLdb.cursors
 import re
-import base64
 import random
 import string
 from PIL import Image 

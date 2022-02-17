@@ -9,10 +9,10 @@ body {
 
 .Form {
     width: 550px;
-    height: 620px;
-    padding: 40px;
+    height: 515px;
+    padding: 30px;
     position: absolute;
-    top: 65%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #ffffff;

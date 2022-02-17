@@ -1,5 +1,5 @@
 from onlineexam import app, socketio  # instances
-from onlineexam import webapp, testing  # python files
+from onlineexam import webapp, auto_proctor  # python files
 
 
 if __name__ == "__main__":

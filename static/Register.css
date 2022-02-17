@@ -1,5 +1,6 @@
 body {
-    background: rgb(255, 255, 255);
+    background-color: #d5fefd;
+    background-image: linear-gradient(90deg, #d5fefd 74%, #fffcff);
     background-size: 100%;
     height: 100%;
 }
@@ -9,7 +10,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: #2699FB;
+    background: linear-gradient(315deg, #145048 30%, #1e3b70 74%);
     border-radius: 5px;
 }
 
@@ -31,15 +32,18 @@ li a:hover {
 }
 
 .card {
-    margin: 130px 30rem;
+    margin: 10rem 30rem;
     box-shadow: 0 10px 19px 0 rgba(59, 59, 59, 0.342);
     transition: 0.3s;
     width: 300px;
     border-radius: 10px;
+    background-color: #7ee8fa;
+    background-image: linear-gradient(315deg, #7ee8fa 0%, #80ff72 74%);
 }
 
 .card:hover {
-    box-shadow: 0 8px 29px 0 rgb(36, 36, 36);
+    box-shadow: 0 8px 20px 0 rgb(36, 36, 36);
+    background: linear-gradient(315deg, #c373f2, #36D1DC);
 }
 
 .container {
@@ -47,15 +51,18 @@ li a:hover {
 }
 
 .card1 {
-    margin: -35.5rem 50rem;
+    margin: -37.3rem 50rem;
     box-shadow: 0 10px 19px 0 rgba(59, 59, 59, 0.342);
     transition: 0.3s;
     width: 300px;
     border-radius: 10px;
+    background-color: #7ee8fa;
+    background-image: linear-gradient(315deg, #7ee8fa 0%, #80ff72 74%);
 }
 
 .card1:hover {
-    box-shadow: 0 8px 29px 0 rgb(36, 36, 36);
+    box-shadow: 0 8px 20px 0 rgb(36, 36, 36);
+    background: linear-gradient(315deg, #c373f2, #36D1DC);
 }
 
 .Buttons {

@@ -363,10 +363,10 @@ def StartQuiz():
 
 @app.route('/student/Test', methods=['GET', 'POST'])
 def Test():
-	#code = session['code']
-	#cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-	#cursor.execute("SELECT * FROM "+code)
-	#data = cursor.fetchall()
+	code = session['code']
+	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute("SELECT * FROM "+code)
+	data = cursor.fetchall()
 	return render_template('student/Test.html')
 
 @app.route('/logout') 

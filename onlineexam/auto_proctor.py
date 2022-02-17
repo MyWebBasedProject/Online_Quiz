@@ -4,8 +4,8 @@ import dlib
 import threading
 import numpy as np
 import math, time
-import MySQLdb, os
-from onlineexam import socketio, backend
+import MySQLdb
+from onlineexam import socketio, threaded_backend
 
 img_count = 0
 time_gap = 2
@@ -356,8 +356,8 @@ def violation(backendInstance):
 
 @socketio.on('violation')
 def start_violation():
-    print("start_violation: ")
-    backendInstance = backend.BackendOperations()
+    #print("start_violation: ")
+    backendInstance = threaded_backend.BackendOperations()
     t1 = threading.Thread(target=detect_person_mobile, args=(backendInstance,))
     t2 = threading.Thread(target=violation, args=(backendInstance,))
 

@@ -51,7 +51,7 @@
         console.log(socket);
 
         document.addEventListener('visibilitychange', function(e) {
-            if(document.visibilityState === "hidden" || !document.hasFocus())
+            if(document.visibilityState === "hidden")
             {
                 console.log(document.hasFocus());
                 takeScreenShot();

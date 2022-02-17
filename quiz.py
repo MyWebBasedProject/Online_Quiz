@@ -126,7 +126,7 @@ def TeacherSignUp():
 				(id, profile_pic, first_name, last_name, middle_name, dob, age, email, password, ))
 				mysql.connection.commit()
 				msg = '%s %s, you have successfully registered ! Your Id is %s'%(first_name,last_name,id)
-				return redirect(url_for("login"))
+				return redirect(url_for("home"))
 	return render_template('Register/TeacherSignUp.html', msg=msg)
 
 @app.route('/Register/StudentSignUp', methods =['GET', 'POST'])
@@ -172,7 +172,7 @@ def StudentSignUp():
 				(id, profile_pic, first_name, last_name, middle_name, dob, age, email, password, branch, semester, ))
 				mysql.connection.commit()
 				msg = '%s %s, you have successfully registered ! Your Id is %s'%(first_name,last_name,id)
-				return redirect(url_for("login"))
+				return redirect(url_for("home"))
 	return render_template('Register/StudentSignUp.html', msg=msg)
 
 @app.route('/teacher', methods=['GET', 'POST'])

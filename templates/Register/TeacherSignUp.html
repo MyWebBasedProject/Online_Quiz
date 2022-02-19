@@ -39,10 +39,10 @@
 
             <input type="email" id="email" name="email" placeholder="Email ID"><br>
 
-            <input type="password" id="password" name="password" placeholder="password">
-            <input style="float: right;margin:-3.8rem 12px;" type="password" id="Confirm_password" name="Confirm_password" placeholder="Confirm password">
-
-            <br>
+            <input type="password" id="password" name="password" placeholder="password" onkeyup="checkPasswordStrength()">
+            <div id="password-strength-status"></div><br>
+            <input type="password" id="Confirm_password" name="Confirm_password" placeholder="Confirm password" onkeyup="checkPassword()">
+            <div id="password-status"></div>
             <label><p class="text">Upload Your Profile Image: </label>
             <input type="file" name="profile_pic" id="profile_pic" accept="image/*" multiple size="1">
 
@@ -51,7 +51,48 @@
             <input type="submit" value="Submit" name="submit">
         </form>
     </div>
-    <script type="text/javascript" src="{{ url_for('static', filename='TeacherRegister.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function checkPasswordStrength() {
+            var number = /([0-9])/;
+            var alphabets = /([a-zA-Z])/;
+            var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+            if ($('#password').val().length < 6) {
+                $('#password-strength-status').removeClass();
+                $('#password-strength-status').addClass('weak-password');
+                $('#password-strength-status').html("Weak (should be atleast 6 characters.)");
+            } else {
+                if ($('#password').val().match(number) && $('#password').val().match(alphabets) && $('#password').val().match(special_characters)) {
+                    $('#password-strength-status').removeClass();
+                    $('#password-strength-status').addClass('strong-password');
+                    $('#password-strength-status').html("Strong");
+                } else {
+                    $('#password-strength-status').removeClass();
+                    $('#password-strength-status').addClass('medium-password');
+                    $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
+                }
+            }
+        }
+
+        function checkPassword() {
+            if ($('#password').val().length == 0) {
+                $('#password-status').removeClass()
+                $('#password-status').addClass("weak-password")
+                $('#password-status').html("Password field is empty")
+            } else {
+                if ($('#password') == $('#Confirm_password')) {
+                    $('#password-status').removeClass()
+                    $('#password-status').addClass("strong-password")
+                    $('#password-status').html("Password matched")
+                } else {
+                    $('#password-status').removeClass()
+                    $('#password-status').addClass("weak-password")
+                    $('#password-status').html("Password doesn't match")
+                }
+            }
+        }
+    </script>
+
 </body>
 
 </html>

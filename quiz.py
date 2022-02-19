@@ -356,13 +356,13 @@ def StartQuiz():
 				return render_template('student/StartQuiz.html', msg = msg)
 			else:
 				session['code'] = code
-				return redirect(url_for("Test"))
+				return redirect(url_for("StartTest"))
 	return render_template('student/StartQuiz.html', msg = msg)
 
 @app.route('/student/Test', methods=['GET', 'POST'])
 def Test():
 	date = " "
-	time = " "
+	end = " "
 	start = " "
 	code = session['code']
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -370,15 +370,22 @@ def Test():
 	test = cursor.fetchone()
 	if test:
 		date = test['date']
-		time = test['end_time']
+		end = test['end_time']
 		start = test['start_time']
 	cursor.execute("SELECT * FROM "+code)
 	data = cursor.fetchall()
-	return render_template('student/Test.html',date=date, time=time, data=data, start=start)
+	return render_template('student/Test.html',date=date, end=end, data=data, start=start)
 
 @app.route('/student/StartTest', methods=['GET', 'POST'])
 def StartTest():
-	return render_template('student/StartTest.html')
+	start = " "
+	code = session['code']
+	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute("SELECT * FROM quiz_details where code=%s",(code, ))
+	test = cursor.fetchone()
+	if test:
+		start = test['start_time']
+	return render_template('student/StartTest.html', start=start)
 
 @app.route('/logout')
 def logout():

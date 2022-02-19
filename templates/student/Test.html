@@ -49,9 +49,12 @@
 </body>
 <script>
     var date = "{{date}}"
-    var time = "{{time}}"
-    var datetime = date + " " + time
-    var countDownDate = new Date(datetime).getTime();
+    var end = "{{end}}"
+    var start = "{{start}}"
+    var starttime = date + " " + start
+    var endtime = date + " " + end
+    var StartTimer = new Date(starttime).getTime();
+    var countDown = new Date(endtime).getTime();
 
     // Update the count down every 1 second
     var x = setInterval(function() {
@@ -59,22 +62,26 @@
         // Get today's date and time
         var now = new Date().getTime();
 
-        // Find the distance between now and the count down date
-        var distance = countDownDate - now;
+        var startdist = StartTimer - now;
+        if (startdist > 0) {
+            window.location.replace("http://127.0.0.1:5000/student/StartTest");
+        } else {
+            var distance = countDown - now;
 
-        // Time calculations for days, hours, minutes and seconds
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // Time calculations for days, hours, minutes and seconds
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Output the result in an element with id="demo"
-        document.getElementById("Timer").innerHTML = hours + ":" +
-            minutes + ":" + seconds;
+            // Output the result in an element with id="demo"
+            document.getElementById("Timer").innerHTML = hours + ":" +
+                minutes + ":" + seconds;
 
-        // If the count down is over, write some text 
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("Timer").innerHTML = "EXPIRED";
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("Timer").innerHTML = "EXPIRED";
+            }
         }
     }, 1000);
 </script>

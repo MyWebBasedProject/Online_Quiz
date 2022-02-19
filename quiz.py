@@ -88,18 +88,17 @@ def register():
 @app.route('/Register/TeacherSignUp', methods =['GET', 'POST'])
 def TeacherSignUp():
 	msg= ''
-	if request.method == 'POST' and 'first_name' in request.form and 'last_name' in request.form and 'middle_name' in request.form and 'dob' in request.form and 'age' in request.form and  'email' in request.form and 'password' in request.form and 'Confirm_password' in request.form and 'profile_pic' in request.files:	
+	if request.method == 'POST' and 'first_name' in request.form and 'last_name' in request.form and 'middle_name' in request.form and 'dob' in request.form and  'email' in request.form and 'password' in request.form and 'Confirm_password' in request.form and 'profile_pic' in request.files:	
 		first_name = request.form['first_name']
 		last_name = request.form['last_name']
 		middle_name = request.form['middle_name']
 		dob = request.form['dob']
-		age = request.form['age']
 		email = request.form['email']
 		password = request.form['password']
 		c_password = request.form['Confirm_password']
 		profile_pic =request.files['profile_pic']
 
-		if not first_name or not last_name or not middle_name or not dob or not age or not email or not password or not c_password or not profile_pic:
+		if not first_name or not last_name or not middle_name or not dob or not email or not password or not c_password or not profile_pic:
 			msg = 'Please fill out the form !'
 			return render_template('Register/TeacherSignUp.html', msg=msg)
 		else:
@@ -120,10 +119,10 @@ def TeacherSignUp():
 				name = remove(name)
 				filename = secure_filename(name)
 				profile_pic.save(os.path.join(app.config['teacher'], filename))
-				profile_pic = "http://127.0.0.1:5000/static/profilepics/teacher/%s"%(name)
+				profile_pic = "http://127.0.0.1:5000/static/profilepics/teacher/%s.jpeg"%(name)
 				id=random.randint(0000,9999)
-				cursor.execute('INSERT INTO teacher VALUES (%s, %s, % s, % s, % s, % s, % s, % s, % s)',
-				(id, profile_pic, first_name, last_name, middle_name, dob, age, email, password, ))
+				cursor.execute('INSERT INTO teacher VALUES (%s, %s, % s, % s, % s, % s, % s, % s)',
+				(id, profile_pic, first_name, last_name, middle_name, dob, email, password, ))
 				mysql.connection.commit()
 				msg = '%s %s, you have successfully registered ! Your Id is %s'%(first_name,last_name,id)
 				return redirect(url_for("home"))
@@ -132,12 +131,11 @@ def TeacherSignUp():
 @app.route('/Register/StudentSignUp', methods =['GET', 'POST'])
 def StudentSignUp():
 	msg= ''
-	if request.method == 'POST' and 'first_name' in request.form and 'last_name' in request.form and 'middle_name' in request.form and 'dob' in request.form and 'age' in request.form and  'email' in request.form and 'password' in request.form and 'Confirm_password' in request.form and 'branch' in request.form and 'semester' in request.form and 'profile_pic' in request.files:	
+	if request.method == 'POST' and 'first_name' in request.form and 'last_name' in request.form and 'middle_name' in request.form and 'dob' in request.form and  'email' in request.form and 'password' in request.form and 'Confirm_password' in request.form and 'branch' in request.form and 'semester' in request.form and 'profile_pic' in request.files:	
 		first_name = request.form['first_name']
 		last_name = request.form['last_name']
 		middle_name = request.form['middle_name']
 		dob = request.form['dob']
-		age = request.form['age']
 		email = request.form['email']
 		password = request.form['password']
 		c_password = request.form['Confirm_password']
@@ -145,7 +143,7 @@ def StudentSignUp():
 		semester = request.form['semester']
 		profile_pic =request.files['profile_pic']
 
-		if not first_name or not last_name or not middle_name or not dob or not age or not email or not password or not c_password or not branch or not semester or not profile_pic:
+		if not first_name or not last_name or not middle_name or not dob or not email or not password or not c_password or not branch or not semester or not profile_pic:
 			msg = 'Please fill out the form !'
 			return render_template('Register/StudentSignUp.html', msg=msg)
 		else:
@@ -166,10 +164,10 @@ def StudentSignUp():
 				name = remove(name)
 				filename = secure_filename(name)
 				profile_pic.save(os.path.join(app.config['student'], filename))
-				profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s"%(name)
+				profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s.jpeg"%(name)
 				id=random.randint(0000,9999)
-				cursor.execute('INSERT INTO student VALUES (%s, %s, % s, % s, % s, % s, % s, % s, % s, %s, %s)',
-				(id, profile_pic, first_name, last_name, middle_name, dob, age, email, password, branch, semester, ))
+				cursor.execute('INSERT INTO student VALUES (%s, %s, % s, % s, % s, % s, % s, % s, %s, %s)',
+				(id, profile_pic, first_name, last_name, middle_name, dob, email, password, branch, semester, ))
 				mysql.connection.commit()
 				msg = '%s %s, you have successfully registered ! Your Id is %s'%(first_name,last_name,id)
 				return redirect(url_for("home"))
@@ -238,6 +236,8 @@ def Quiz():
 	n = int(no)
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	if request.method == "POST" and 'qno' in request.form and 'question' in request.form and 'image' in request.files and 'option_1' in request.form and 'option_2' in request.form and 'option_3' in request.form and 'option_4' in request.form and 'answer' in request.form:
+		if request.form == "submit":
+			msg = "All questions has not been added" 
 		qno = request.form['qno']
 		question = request.form['question']
 		image = request.files['image']
@@ -259,7 +259,7 @@ def Quiz():
 		if image:
 			filename = secure_filename(question_code)
 			image.save(os.path.join(app.config['question_image'], filename))
-			image = "http://127.0.0.1:5000/static/question_image/%s"%(question_code)
+			image = "http://127.0.0.1:5000/static/question_image/%s.jpeg"%(question_code)
 		else:
 			image = "NULL"
 		if not qno or not question or not option_1 or not option_2 or not option_3 or not option_4 or not answer:
@@ -319,7 +319,7 @@ def Modify():
 			if os.path.isfile(app.config['question_image'], filename):
 				os.remove(app.config['question_image'], filename)
 			image.save(os.path.join(app.config['question_image'], filename))
-			image = "http://127.0.0.1:5000/static/question_image/%s"%(question_code)
+			image = "http://127.0.0.1:5000/static/question_image/%s.jpeg"%(question_code)
 		else:
 			image = "NULL"
 		if not qno or not question or  not option_1 or not option_2 or not option_3 or not option_4 or not answer:
@@ -335,6 +335,7 @@ def Modify():
 				return render_template('teacher/Modify.html',msg =msg)
 			else:
 				cursor.execute("UPDATE "+table+" SET question =%s, image =%s, option_1= %s, option_2= %s, option_3= %s, option_4= %s, answer= %s where question_code = %s",
+			
 				(question, image, option_1, option_2, option_3, option_4, answer, question_code, ))
 				return render_template('teacher/Modify.html')
 	return render_template('teacher/Modify.html')
@@ -354,22 +355,32 @@ def StartQuiz():
 				msg = "Enter correct Quiz Code"
 				return render_template('student/StartQuiz.html', msg = msg)
 			else:
-				session['date'] = data['date']
-				session['time'] = data['end_time']
-
 				session['code'] = code
 				return redirect(url_for("Test"))
 	return render_template('student/StartQuiz.html', msg = msg)
 
 @app.route('/student/Test', methods=['GET', 'POST'])
 def Test():
+	date = " "
+	time = " "
+	start = " "
 	code = session['code']
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute("SELECT * FROM quiz_details where code=%s",(code, ))
+	test = cursor.fetchone()
+	if test:
+		date = test['date']
+		time = test['end_time']
+		start = test['start_time']
 	cursor.execute("SELECT * FROM "+code)
 	data = cursor.fetchall()
-	return render_template('student/Test.html')
+	return render_template('student/Test.html',date=date, time=time, data=data, start=start)
 
-@app.route('/logout') 
+@app.route('/student/StartTest', methods=['GET', 'POST'])
+def StartTest():
+	return render_template('student/StartTest.html')
+
+@app.route('/logout')
 def logout():
 	session.clear()
 	return redirect(url_for("home"))

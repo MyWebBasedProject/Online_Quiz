@@ -48,12 +48,12 @@
         </div>
 </body>
 <script>
-    var date = "{{date}}"
-    var end = "{{end}}"
-    var start = "{{start}}"
-    var starttime = date + " " + start
-    var endtime = date + " " + end
+    var date = "{{date}}";
+    var end = "{{duration}}";
+    var start = "{{start}}";
+    var starttime = date + " " + start;
     var StartTimer = new Date(starttime).getTime();
+    var endtime = date + " " + end;
     var countDown = new Date(endtime).getTime();
 
     // Update the count down every 1 second
@@ -61,13 +61,10 @@
 
         // Get today's date and time
         var now = new Date().getTime();
-
-        var startdist = StartTimer - now;
-        if (startdist > 0) {
+        var distance = countDown - now;
+        if (StartTimer > now) {
             window.location.replace("http://127.0.0.1:5000/student/StartTest");
         } else {
-            var distance = countDown - now;
-
             // Time calculations for days, hours, minutes and seconds
             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));

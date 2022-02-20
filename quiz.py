@@ -199,14 +199,22 @@ def QCreate():
 	session['code']=code
 	if request.method == "POST" and 'title' in request.form and 'branch' in request.form and 'sem' in request.form and 'subject' in request.form and 'questions' in request.form and 'date' in request.form and 'start_time' in request.form and 'end_time' in request.form:
 		title = request.form['title']
+		session['title'] = title
 		branch = request.form['branch']
+		session['branch'] = branch
 		sem = request.form['sem']
+		session['sem'] = sem
 		subject = request.form['subject']
+		session['subject'] = subject
 		questions = request.form['questions']
 		session['questions'] = questions
 		date = request.form['date']
+		session['date'] = date
 		start_time = request.form['start_time']
-		end_time = request.form['end_time']
+		session['start_time'] = start_time
+		duration = request.form['end_time']
+		session['end_time'] = end_time
+		end_time = datetime.strptime(duration,'%H:%M')
 		if not title or not branch or not sem or not subject or not questions or not date or not start_time or not end_time:
 			msg = "Please fill out the form"
 			return render_template('teacher/QCreate.html',id=teacher_id, code=code, msg = msg)
@@ -286,7 +294,7 @@ def Quiz():
 					quiz = Message(subject = msg,
 								sender = "onlinequizexamination@gmail.com",
 								recipients = [email['email']])
-					quiz.body = "This is to inform you that quiz has been created for "+session['subject']+" on "+session['date']+". Test details are as follows : \r\n Subject: "+session['subject']+"\r\n Title: "+session['title']+"\r\n Quiz Code: "+session['code']+"\r\n Date :"+session['date']+"\r\n Duration :"+session['duration']+"\r\n Start Time: "+session['start_time'] 
+					quiz.body = "This is to inform you that quiz has been created for "+session['subject']+" on "+session['date']+". Test details are as follows : \r\n Subject: "+session['subject']+"\r\n Title: "+session['title']+"\r\n Quiz Code: "+session['code']+"\r\n Date :"+session['date']+"\r\n Duration :"+session['end_time']+"\r\n Start Time: "+session['start_time'] 
 					mail.send(quiz)
 				return redirect(url_for('teacher'))
 	return render_template('teacher/Quiz.html', msg=msg, n=n)
@@ -356,7 +364,7 @@ def StartQuiz():
 				return render_template('student/StartQuiz.html', msg = msg)
 			else:
 				session['code'] = code
-				return redirect(url_for("StartTest"))
+				return redirect(url_for("Test"))
 	return render_template('student/StartQuiz.html', msg = msg)
 
 @app.route('/student/Test', methods=['GET', 'POST'])
@@ -370,11 +378,15 @@ def Test():
 	test = cursor.fetchone()
 	if test:
 		date = test['date']
-		end = test['end_time']
-		start = test['start_time']
+		end = str(test['duration'])
+		start = str(test['start_time'])
+		t1 = datetime.strptime(start, '%H:%M:%S')
+		t2 = datetime.strptime(end, '%H:%M:%S')
+		time_zero = datetime.strptime('00:00:00', '%H:%M:%S')
+		duration = (t1 - time_zero + t2).time()
 	cursor.execute("SELECT * FROM "+code)
 	data = cursor.fetchall()
-	return render_template('student/Test.html',date=date, end=end, data=data, start=start)
+	return render_template('student/Test.html',date=date, duration=duration, data=data, start=start)
 
 @app.route('/student/StartTest', methods=['GET', 'POST'])
 def StartTest():

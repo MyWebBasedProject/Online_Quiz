@@ -9,7 +9,7 @@ body {
 
 .Form {
     width: 550px;
-    height: 475px;
+    height: 530px;
     padding: 40px;
     position: absolute;
     top: 55%;
@@ -25,7 +25,28 @@ body {
 .err_msg {
     color: #f75c5c;
     font-family: 'Raleway', sans-serif;
-    font-size: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.medium-password {
+    color: #BBB418;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.weak-password {
+    color: #ce1d14;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.strong-password {
+    color: #12CC1A;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
     font-weight: bold;
 }
 
@@ -89,7 +110,7 @@ input[type=password] {
     font-weight: 1000;
     border: 1px solid #535c5c;
     padding: 13px 8px;
-    width: 15rem;
+    width: 25rem;
     outline: none;
     color: rgb(41, 38, 38);
     border-radius: 14px;
@@ -195,20 +216,4 @@ input[type="date"]:focus {
     border-color: #535c5c;
     text-align: left;
     box-shadow: #585454d3 0px 7px 29px 0px;
-}
-
-#age {
-    border: 0;
-    background: #f7f7f7;
-    display: block;
-    text-align: left;
-    font-family: 'Raleway', sans-serif;
-    font-size: 18px;
-    font-weight: 1000;
-    border: 1px solid #535c5c;
-    padding: 10px 8px;
-    width: 8rem;
-    outline: none;
-    color: rgb(41, 38, 38);
-    border-radius: 14px;
 }

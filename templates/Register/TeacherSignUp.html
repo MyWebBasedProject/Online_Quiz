@@ -27,7 +27,7 @@
 
     <div class="Form">
 
-        <form name="SignUpForm" onsubmit="return validateForm()" action="TeacherSignUp" enctype="multipart/form-data" method="POST">
+        <form name="SignUpForm" action="TeacherSignUp" enctype="multipart/form-data" method="POST">
 
             <input type="text" id="first_name" name="first_name" placeholder="First Name">
 
@@ -75,19 +75,19 @@
         }
 
         function checkPassword() {
-            if ($('#password').val().length == 0) {
-                $('#password-status').removeClass()
-                $('#password-status').addClass("weak-password")
-                $('#password-status').html("Password field is empty")
+            if (($('#password').val().length == 0) || ($('#Confirm_password').val().length == 0)) {
+                $('#password-status').removeClass();
+                $('#password-status').addClass("weak-password");
+                $('#password-status').html("Password field is empty");
             } else {
                 if ($('#password') == $('#Confirm_password')) {
-                    $('#password-status').removeClass()
-                    $('#password-status').addClass("strong-password")
-                    $('#password-status').html("Password matched")
+                    $('#password-status').removeClass();
+                    $('#password-status').addClass("strong-password");
+                    $('#password-status').html("Password matched");
                 } else {
-                    $('#password-status').removeClass()
-                    $('#password-status').addClass("weak-password")
-                    $('#password-status').html("Password doesn't match")
+                    $('#password-status').removeClass();
+                    $('#password-status').addClass("weak-password");
+                    $('#password-status').html("Password doesn't match");
                 }
             }
         }

@@ -379,13 +379,15 @@ def Test():
 @app.route('/student/StartTest', methods=['GET', 'POST'])
 def StartTest():
 	start = " "
+	date = " "
 	code = session['code']
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	cursor.execute("SELECT * FROM quiz_details where code=%s",(code, ))
 	test = cursor.fetchone()
 	if test:
+		date = test['date']
 		start = test['start_time']
-	return render_template('student/StartTest.html', start=start)
+	return render_template('student/StartTest.html', start=start, date=date)
 
 @app.route('/logout')
 def logout():

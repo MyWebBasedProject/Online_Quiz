@@ -3,6 +3,7 @@ from onlineexam import app, viewReport, mydb
 import pyautogui
 import time
 
+
 @app.route("/take_screenShot", methods=['POST'])
 def takeScreenShot():
     if request.method == "POST":
@@ -20,16 +21,18 @@ def takeScreenShot():
 
 
 @app.route("/show_records_and_images", methods=['POST'])
-def printReport():
+def printAllRecords():
     if request.method == "POST":
-        print("print Report")
-        records_images_tuple = viewReport.getVioaltionAndImage()
+        message = request.form['option']
+        print(message)
+        records_images_tuple = viewReport.getViolationAndImage(message)
         record_images = {}
         for i in records_images_tuple:
             record_images[i[0]] = {
                 "message": i[1],
                 "image": str(i[2]),
-                "time": str(i[3])
+                "time": str(i[3]),
+                "duration": str(i[4])
             }
 
         return record_images

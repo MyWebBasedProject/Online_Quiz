@@ -154,26 +154,26 @@ def face_orientation(frame, landmarks):
         angle_r = math.atan((m2 - m1 / (1 + (m1 * m2))))
         angle_d = round(math.degrees(angle_r))
         angle_d = 180 - angle_d
-        cv2.putText(frame, str(angle_d), (300, 100),
-                    cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
+        cv2.putText(frame, str(angle_d), (500, 150),
+                    cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 1)
         if angle_d < 160:
             face_direction = 'Face Left Side'
-            cv2.putText(frame,'Face Left Side', (100, 100),
-                        cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
+            cv2.putText(frame,'Face Left Side', (100, 150),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 1)
             return False
         elif angle_d > 200:
             face_direction = "Face Right Side"
-            cv2.putText(frame, "Face Right Side", (100, 100),
-                        cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
+            cv2.putText(frame, "Face Right Side", (100, 150),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 1)
             return False
         else:
             face_direction = "center side"
-            cv2.putText(frame, "center", (100, 100),
-                        cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 3)
+            cv2.putText(frame, "center", (100, 150),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 1)
             return True
 
 
-def gaze_calcualtion(backendInstance, frame, gray, landmarks, mydb):
+def gaze_calcualtion(frame, gray, landmarks):
     global eye_direction
     left_eye = [36, 37, 38, 39, 40, 41]
     right_eye = [42, 43, 44, 45, 46, 47]
@@ -186,21 +186,15 @@ def gaze_calcualtion(backendInstance, frame, gray, landmarks, mydb):
     right = right_l + right_r
 
     if left < right and left < center:
-        eye_direction = "left"
-        cv2.putText(frame, "Eye: Left", (50, 200),
-                    cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
+        eye_direction = "Looking Left"
         return False
 
     elif right < left and right < center:
-        eye_direction = "right"
-        cv2.putText(frame, "Eye: Right", (50, 200),
-                    cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 3)
+        eye_direction = "Looking Right"
         return False
 
     elif center < left and center < right:
         eye_direction = "center"
-        cv2.putText(frame, "Eye: Center", (50, 200),
-                    cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
         return True
 
 
@@ -276,8 +270,6 @@ def detect_person_mobile(backendInstance):
                     x, y, w, h = boxes[i]
                     label = str(classes_names[int(class_ids[i])])
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-                    cv2.putText(
-                        frame, label + ": " + str(class_ids[i]), (x, y+40), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 0), 1)
 
             if persons > 1 and not_doing_person_violation == True:
                 violation_done += 1
@@ -301,8 +293,6 @@ def detect_person_mobile(backendInstance):
                 print("mobile violation: " + str(total_time_mobile) )
                 insert_Image(backendInstance, 'Mobile Detected', violation_mobile_image, mydb, total_time_mobile)
 
-            cv2.putText(frame, str(face_count), (50, 100),
-                        cv2.FONT_HERSHEY_COMPLEX, 3, (0, 255, 255))
             cv2.imshow("person mobile", frame)
             socketio.emit('detect_person_mobile',
                           (persons, mobiles, str_correct_person))
@@ -318,11 +308,13 @@ def violation(backendInstance):
     not_doing_face_direction_violation = True
     not_doing_eye_direction_violation = True
 
-
+    violation_no_face_image = None
+    violation_face_direction_image = None
+    violation_eye_direction_image = None
+    violation_correct_person_image = None
 
     mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='exam')
     start_time = 0
-    violation_image = None
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format
 
@@ -340,12 +332,12 @@ def violation(backendInstance):
                 not_doing_face_violation = False
                 violation_done += 1
                 start_time = time.time()
-                violation_image = frame
+                violation_no_face_image = frame
 
             elif face_count==1 and persons==1 and not_doing_face_violation == False:
                 not_doing_face_violation  = True
                 total_time = time.time() - start_time
-                insert_Image(backendInstance, 'No Face Detected',violation_image, mydb, total_time)
+                insert_Image(backendInstance, 'No Face Detected', violation_no_face_image, mydb, total_time)
 
             elif face_count==1 and persons == 1 and not_doing_face_violation == True:
                 # print('no problem')
@@ -360,18 +352,17 @@ def violation(backendInstance):
                     violation_done += 1
                     start_time = time.time()
                     not_doing_wrong_person_violation = False
-                    violation_image = frame
+                    violation_correct_person_image = frame
                     # print("wrong person detected")
 
 
                 elif correct_person[0]==True and not_doing_wrong_person_violation==False:
                     not_doing_wrong_person_violation = True
                     total_time = time.time() - start_time
-                    insert_Image(backendInstance, 'Wrong Person', violation_image, mydb, total_time)
+                    insert_Image(backendInstance, 'Wrong Person', violation_correct_person_image, mydb, total_time)
                     # print('Wrong person gone')
 
                 elif correct_person[0]==True and not_doing_wrong_person_violation == True:
-                   # print("no problem")
 
                     if face_perimenter > 400 and face_perimenter < 525:
                         face_orientation_check = face_orientation(frame, landmarks)
@@ -379,23 +370,22 @@ def violation(backendInstance):
                         if face_orientation_check==False and not_doing_face_direction_violation == True:
                             not_doing_face_direction_violation= False
                             start_time = time.time()
-                            violation_done+=1
-                            violation_image = frame
+                            violation_done += 1
+                            violation_face_direction_image = frame
                             violation_msg = face_direction
 
                         elif face_orientation_check==True and not_doing_face_direction_violation==False:
                             not_doing_face_direction_violation = True
                             total_time = time.time() - start_time
-                            insert_Image(backendInstance, violation_msg, violation_image, mydb, total_time)
-                            print('Wrong Direction Stopped')
+                            insert_Image(backendInstance, violation_msg, violation_face_direction_image, mydb, total_time)
+
 
                         elif face_orientation_check==True and not_doing_face_direction_violation == True:
-                            print("no problem")
-                            gaze_detection_check = gaze_calcualtion(backendInstance, frame, gray, landmarks, mydb)
+                            gaze_detection_check = gaze_calcualtion( frame, gray, landmarks)
 
                             if gaze_detection_check == False and not_doing_eye_direction_violation == True:
                                 not_doing_eye_direction_violation = False
-                                violation_image = frame
+                                violation_eye_direction_image = frame
                                 violation_done+=1
                                 violation_msg = eye_direction
                                 start_time = time.time()
@@ -403,23 +393,29 @@ def violation(backendInstance):
                             elif gaze_detection_check == True and not_doing_eye_direction_violation == False:
                                 total_time = time.time() - start_time
                                 not_doing_eye_direction_violation = True
-                                insert_Image(backendInstance, violation_msg, violation_done, mydb, total_time)
+                                insert_Image(backendInstance, violation_msg, violation_eye_direction_image, mydb, total_time)
 
                             elif gaze_detection_check == True and not_doing_eye_direction_violation == True:
                                 print("no problem")
 
                     elif face_perimenter < 400:
-                        cv2.putText(frame, str("Face too far"), (100, 100),
-                                    cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 0), 3)
+                        cv2.putText(frame, str("Face too far"), (100, 200),
+                                    cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 0), 1)
                     elif face_perimenter > 525:
-                        cv2.putText(frame, str("Face too close"), (100, 100),
-                                    cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 0), 3)
+                        cv2.putText(frame, str("Face too close"), (100, 200),
+                                    cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 0), 1)
 
-            cv2.putText(frame, "Is correct Person" + str(correct_person), (50, 100),
-                                cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255))
+            
+            cv2.putText(frame, "Is correct Person" + str(correct_person), (100, 50),
+                                cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255),1)
+
+            cv2.putText(frame, "Eye direction: " + str(eye_direction), (100, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255,0,255), 1)
+            
             cv2.imshow("violations", frame)
+            
             socketio.emit('violation', (face_count,
                                   eye_direction, face_direction))
+            
             socketio.emit('number_of_violation', (violation_done))
             global canBreak
             if cv2.waitKey(1) & canBreak == True:

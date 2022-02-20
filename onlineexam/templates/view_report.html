@@ -7,11 +7,25 @@
 
 {% block body %}
     <h1>View Report</h1>
+        <select name="violations" id="violations">
+            <option value="All">All</option>
+            <option value="Face Left Side">Face Left Side</option>
+            <option value="Face Right Side">Face Right Side</option>
+            <option value="Looking Left">Looking Left</option>
+            <option value="Looking Right">Looking Right</option>
+            <option value="Mobile Detected">Mobile Detected</option>
+            <option value="Looking Right">Multiple Person Detected</option>
+            <option value="No Face Detected">No Face Detected</option>
+            <option value="Wrong Person">Wrong Person</option>
+        </select>
+
     <table class="record-table">
         <thead>
           <tr>
             <th>Message</th>
             <th>Time</th>
+              <th>Image</th>
+              <th>Duration</th>
           </tr>
         </thead>
         <tbody>
@@ -20,16 +34,29 @@
     </table>
 
 <script type="text/javascript">
-        $(document).ready(function(){
-        console.log("ready function");
+
+        var option="All", current_option="";
+
+        var interval = setInterval(check, 1000);
+        function check() 
+        { 
+        option = $('#violations').val();
+        if(current_option!=option)
+            {
+                current_option=option;
+                showViolations();
+            }
+        }
 
             function showViolations()
             {
+                console.log(option);
                 console.log("Called Show Violations");
-                event.preventDefault();
+                $(".record-table tbody").children().remove();
                 $.ajax({
-                    url:"/show_records_and_images",
+                    url: "/show_records_and_images",
                     type:"POST",
+                    data: {'option': option},
                     success: function(data)
                     {
                         console.log(Object.keys(data).length);
@@ -37,14 +64,13 @@
                         {
                             console.log(data[key]["image"]);
 
-                            $(".record-table tbody").append("<tr><td>" + data[key]['message'] + "</td><td>" + data[key]['time'] + "</td><td> " + "<img src=" + data[key]['image'] + " width= 25% height= 25%;>" + "</td></tr>");
+                            $(".record-table tbody").append("<tr><td>" + data[key]['message'] + "</td><td>" + data[key]['time'] + "</td><td> " + "<img src=" + data[key]['image'] + " width= 25% height= 25%;>" + "</td><td>" + data[key]['duration'] + "</td></tr>" );
                         }
                         
                     }
                 });
             }
 
-            showViolations();
-        });
+
 </script>
 {% endblock %}

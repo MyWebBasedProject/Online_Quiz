@@ -213,8 +213,9 @@ def QCreate():
 		start_time = request.form['start_time']
 		session['start_time'] = start_time
 		duration = request.form['end_time']
-		session['end_time'] = end_time
+		session['duration']=duration
 		end_time = datetime.strptime(duration,'%H:%M')
+		session['end_time'] = end_time
 		if not title or not branch or not sem or not subject or not questions or not date or not start_time or not end_time:
 			msg = "Please fill out the form"
 			return render_template('teacher/QCreate.html',id=teacher_id, code=code, msg = msg)
@@ -294,7 +295,7 @@ def Quiz():
 					quiz = Message(subject = msg,
 								sender = "onlinequizexamination@gmail.com",
 								recipients = [email['email']])
-					quiz.body = "This is to inform you that quiz has been created for "+session['subject']+" on "+session['date']+". Test details are as follows : \r\n Subject: "+session['subject']+"\r\n Title: "+session['title']+"\r\n Quiz Code: "+session['code']+"\r\n Date :"+session['date']+"\r\n Duration :"+session['end_time']+"\r\n Start Time: "+session['start_time'] 
+					quiz.body = "This is to inform you that quiz has been created for "+session['subject']+" on "+session['date']+". Test details are as follows : \r\n Subject: "+session['subject']+"\r\n Title: "+session['title']+"\r\n Quiz Code: "+session['code']+"\r\n Date :"+session['date']+"\r\n Duration :"+session['duration']+"\r\n Start Time: "+session['start_time'] 
 					mail.send(quiz)
 				return redirect(url_for('teacher'))
 	return render_template('teacher/Quiz.html', msg=msg, n=n)

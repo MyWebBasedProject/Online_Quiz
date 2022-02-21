@@ -76,23 +76,22 @@
 
         function checkPassword() {
             if (($('#password').val().length == 0) || ($('#Confirm_password').val().length == 0)) {
-                $('#password-status').removeClass();
-                $('#password-status').addClass("weak-password");
-                $('#password-status').html("Password field is empty");
+                $('#password-status').removeClass()
+                $('#password-status').addClass("weak-password")
+                $('#password-status').html("Password field is empty")
             } else {
-                if ($('#password') == $('#Confirm_password')) {
-                    $('#password-status').removeClass();
-                    $('#password-status').addClass("strong-password");
-                    $('#password-status').html("Password matched");
+                if (($('#password').val()) == ($('#Confirm_password').val())) {
+                    $('#password-status').removeClass()
+                    $('#password-status').addClass("strong-password")
+                    $('#password-status').html("Password matched")
                 } else {
-                    $('#password-status').removeClass();
-                    $('#password-status').addClass("weak-password");
-                    $('#password-status').html("Password doesn't match");
+                    $('#password-status').removeClass()
+                    $('#password-status').addClass("weak-password")
+                    $('#password-status').html("Password doesn't match")
                 }
             }
         }
     </script>
-
 </body>
 
 </html>

@@ -93,12 +93,12 @@
         }
 
         function checkPassword() {
-            if ($('#password').val().length == 0) {
+            if (($('#password').val().length == 0) || ($('#Confirm_password').val().length == 0)) {
                 $('#password-status').removeClass()
                 $('#password-status').addClass("weak-password")
                 $('#password-status').html("Password field is empty")
             } else {
-                if ($('#password') == $('#Confirm_password')) {
+                if (($('#password').val()) == ($('#Confirm_password').val())) {
                     $('#password-status').removeClass()
                     $('#password-status').addClass("strong-password")
                     $('#password-status').html("Password matched")

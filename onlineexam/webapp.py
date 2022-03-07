@@ -14,7 +14,7 @@ def takeScreenShot():
         path = "static/temp_report/Switched_Application/" + str(count) + ".png"
         img.save('onlineexam/' + path)
         myCursor.execute(
-            'INSERT INTO temp_report(message, screenshot) VALUES (%s, %s)', ('Switched_Application', path,))
+            'INSERT INTO temp_report(message, screenshot, violationTime) VALUES (%s, %s, %s)', ('Switched_Application', path, 1,))
         mydb.connection.commit()
         myCursor.close()
         return "1"

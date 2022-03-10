@@ -179,8 +179,10 @@ def teacher():
 	profilepic = session['profile_pic']
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	cursor.execute("SELECT * FROM quiz_details where teacher_id = %s",(id,))
+	n = cursor.rowcount
+	cursor.execute("SELECT * FROM quiz_details where teacher_id = %s",(id,))
 	row = cursor.fetchall()
-	return render_template('teacher.html', details = profilepic, data = row)
+	return render_template('teacher.html', details = profilepic, data = row, n=n)
 
 @app.route('/student', methods=['GET', 'POST'])
 def student():
@@ -189,8 +191,10 @@ def student():
 	semester = session['semester']
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	cursor.execute("SELECT * FROM quiz_details where branch = %s and sem = %s",(branch,semester,))
+	n = cursor.rowcount
+	cursor.execute("SELECT * FROM quiz_details where branch = %s and sem = %s",(branch,semester,))
 	row = cursor.fetchall()
-	return render_template('student.html', details = profilepic, data = row)
+	return render_template('student.html', details = profilepic, data = row,n = n)
 
 @app.route('/teacher/Qcreate', methods=['GET', 'POST'])
 def QCreate():
@@ -302,6 +306,7 @@ def Quiz():
 
 @app.route('/teacher/Modify', methods=['GET', 'POST'])
 def Modify():
+	code = request.args.get("modify")
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	if request.method == "POST":
 		code = request.form['code']
@@ -333,21 +338,13 @@ def Modify():
 			image = "NULL"
 		if not qno or not question or  not option_1 or not option_2 or not option_3 or not option_4 or not answer:
 			msg = "Please fill out the form"
-			return render_template('teacher/Modify.html', msg=msg) 
+			return render_template('teacher/Modify.html', msg=msg,code=code) 
 		else:
-			table = str(code)
-			table = str.lower(code)
-			cursor.execute("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "+table)
-			count = cursor.rowcount
-			if count == 0:
-				msg = "Quiz Code doesn't exists"
-				return render_template('teacher/Modify.html',msg =msg)
-			else:
-				cursor.execute("UPDATE "+table+" SET question =%s, image =%s, option_1= %s, option_2= %s, option_3= %s, option_4= %s, answer= %s where question_code = %s",
-			
-				(question, image, option_1, option_2, option_3, option_4, answer, question_code, ))
-				return render_template('teacher/Modify.html')
-	return render_template('teacher/Modify.html')
+			code = str.lower(code)
+			cursor.execute("UPDATE "+code+" SET question =%s, image =%s, option_1= %s, option_2= %s, option_3= %s, option_4= %s, answer= %s where question_code = %s",			
+			(question, image, option_1, option_2, option_3, option_4, answer, question_code, ))
+			return redirect(url_for('teacher'))
+	return render_template('teacher/Modify.html',code=code)
 
 @app.route('/student/StartQuiz', methods=['GET', 'POST'])
 def StartQuiz():

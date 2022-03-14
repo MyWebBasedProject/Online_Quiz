@@ -238,7 +238,7 @@ def QCreate():
 			cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, %s, %s, %s)', 
 			(code, teacher_id, title, branch, sem, subject, questions, date, start_time, end_time, ))
 			mysql.connection.commit()
-			cursor.execute("SELECT * FROM quiz_details ORDER by date")
+			cursor.execute("SELECT * FROM quiz_details ORDER by date desc,start_time asc")
 			mysql.connection.commit()
 			return redirect(url_for("Quiz"))
 	return render_template('teacher/Qcreate.html', id=teacher_id, code=code)

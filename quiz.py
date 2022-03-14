@@ -238,6 +238,8 @@ def QCreate():
 			cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, %s, %s, %s)', 
 			(code, teacher_id, title, branch, sem, subject, questions, date, start_time, end_time, ))
 			mysql.connection.commit()
+			cursor.execute("SELECT * FROM quiz_details ORDER by date")
+			mysql.connection.commit()
 			return redirect(url_for("Quiz"))
 	return render_template('teacher/Qcreate.html', id=teacher_id, code=code)
 
@@ -370,6 +372,7 @@ def Test():
 	date = " "
 	end = " "
 	start = " "
+	n=0
 	code = session['code']
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	cursor.execute("SELECT * FROM quiz_details where code=%s",(code, ))
@@ -378,13 +381,14 @@ def Test():
 		date = test['date']
 		end = str(test['duration'])
 		start = str(test['start_time'])
+		n=int(test['questions'])
 		t1 = datetime.strptime(start, '%H:%M:%S')
 		t2 = datetime.strptime(end, '%H:%M:%S')
 		time_zero = datetime.strptime('00:00:00', '%H:%M:%S')
 		duration = (t1 - time_zero + t2).time()
 	cursor.execute("SELECT * FROM "+code)
 	data = cursor.fetchall()
-	return render_template('student/Test.html',date=date, duration=duration, data=data, start=start)
+	return render_template('student/Test.html',date=date, duration=duration, data=data, start=start,n=n)
 
 @app.route('/student/StartTest', methods=['GET', 'POST'])
 def StartTest():

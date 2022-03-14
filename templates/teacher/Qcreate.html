@@ -25,7 +25,7 @@
         </ul>
     </div>
     <div class="Form">
-        <form name="QuizForm" onsubmit="return validateForm()" action="Qcreate" method="POST">
+        <form name="QuizForm" action="Qcreate" method="POST">
 
             <div class="err_msg" style="text-align: center;">{{ msg }}</div>
 
@@ -67,7 +67,7 @@
             <input type="text" id="subject" name="subject"><br>
 
             <label>
-                <p style=" font-size:18px;display: inline-block;">No. of Questions: </p>
+                <p style=" display: inline-block;">No. of Questions: </p>
             </label><br>
             <input type="text" id="questions" name="questions"><br>
 
@@ -91,6 +91,8 @@
             <br><br><br><br>
         </form>
     </div>
+    <script>
+    </script>
 </body>
 
 </html>

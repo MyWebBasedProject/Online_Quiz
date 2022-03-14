@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Test</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='Test.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,14 +16,15 @@
     <div class="top">
         <br>
         <div class="Form">
-            <form name="QuizForm" onsubmit="return validateForm()">
+            <form name="QuizForm">
                 <ul>
-                    <li style="float:left;padding: 10px;
+                    <li style="float:left;padding: 15px;
                     color: #FFFFFF;
-                    font-family: Verdana, sans-serif, Arial;
+                    font-family: Raleway, sans-serif, Arial;
                     font-size: 25px;
                     font-weight: bold;
-                    text-decoration: none;">
+                    text-decoration: none;
+                    margin-left: 5rem;">
                         <div id="Timer"></div>
                     </li>
                     <li style="margin: -3rem 45rem;"><input type="submit" value="Submit" name="submit"></a>
@@ -30,6 +32,11 @@
 
                 </ul>
                 <br><br><br> <br><br><br> <br><br><br> <br>
+                <div class="Card1"><br><br><br>
+                    <label><p style="display: inline-block;">Questions</p></label><br><br> {% for i in range (1,n+1): %}
+                    <input type="button" onclick="Question()" value="{{i}}" name="{{i}}"> {% endfor %}
+
+                </div>
                 <label><p style=" display: inline-block;font-size: 23px;">Q.</p></label><br><br><br><br>
 
                 <input type="radio" name="option" value="???">
@@ -42,8 +49,8 @@
                 <label><p2 style="margin:-1.3rem 3rem;">Option 4</p2></label><br><br>
                 <br><br><br><br><br><br>
 
-                <input type="submit" id="previous" style="margin: 0rem 3rem; " value="Previous Question">
-                <input type="submit" id="next" style="margin:0rem -33rem;" value="Next Question">
+                <input type="submit" id="previous" style="margin: 0rem -3rem; " value="← Previous ">
+                <input type="submit" id="next" style="margin:0rem -14rem;" value="Next →">
             </form>
         </div>
 </body>

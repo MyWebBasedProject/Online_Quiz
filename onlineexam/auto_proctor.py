@@ -135,6 +135,7 @@ def get_slopes(pointA, pointB):
     if pointB[1] != pointA[1]:
         return (pointB[0] - pointA[0])/(pointB[1] - pointA[1])
 
+
 def face_orientation(frame, landmarks):
 
     global face_direction, img_count
@@ -298,6 +299,7 @@ def detect_person_mobile(backendInstance):
                           (persons, mobiles, str_correct_person))
         if cv2.waitKey(1) & canBreak == True:
             break
+
 
 def violation(backendInstance):
     # Model

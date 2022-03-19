@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modify</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Quiz.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="top">
+
+        <ul>
+            <li style="float:left;">
+                <a href="http://127.0.0.1:5000/teacher"><img src="{{ url_for('static', filename='home.png') }}" width="40" height="30"></a>
+            </li>
+            <li style="margin: -5rem 80rem;">
+                <a href="http://127.0.0.1:5000/teacher"><input type="button" value="Logout" name="logout"></a>
+            </li>
+
+        </ul>
+    </div>
+    <br><br>
+    <div class="Form">
+        <form name="QuizForm" action="Modify" enctype="multipart/form-data" method="POST">
+            <input type="hidden" id="code" name="code" value="{{code}}"><br>
+            <label><p style="display: inline-block;">Question No :</p></label>
+            <input type="text" id="qno" name="qno"><br>
+
+            <label><p    style=" display: inline-block;">Question :</p></label><br>
+            <input type="text" id="question" name="question"><br>
+            <p style="margin:0.6rem 18rem ;">OR</p>
+
+            <label><p  style=" display: inline-block;">Image <span style="color:red;">(if required)</span>:</p></label><br>
+            <input type="file" id="image" name="image" accept="image/*" multiple size="1"><br>
+
+            <label>
+                <p>Option 1 :</p>
+            </label>
+            <input style="float:right;margin:-2.9rem -1rem ;" type="text" id="option" name="option_1"><br>
+
+            <label>
+                <p>Option 2 :</p>
+            </label>
+            <input style="float:right;margin:-2.9rem -1rem ;" type="text" id="option" name="option_2"><br>
+
+            <label>
+                <p>Option 3 :</p>
+            </label>
+            <input style="float:right;margin:-2.9rem -1rem ;" type="text" id="option" name="option_3"><br>
+
+            <label>
+                <p>Option 4 :</p>
+            </label>
+            <input style="float:right;margin:-2.9rem -1rem ;" type="text" id="option" name="option_4"><br>
+
+
+            <label for="answer"><p style=" display: inline-block;">Answer :</p></label><br>
+            <select id="answer" name="answer" style="float:right;margin:-2.9rem -1rem ;">
+                <option value="select">Select</option>
+                <option value="option_1">Option 1</option>
+                <option value="option_2">Option 2</option>
+                <option value="option_3">Option 3</option>
+                <option value="option_4">Option 4</option>
+            </select><br><br>
+            <input style="margin: 0.6rem 0.7rem;" type="submit" value="Submit" name="submit"><br><br>
+        </form>
+    </div>
+</body>
+
+</html>

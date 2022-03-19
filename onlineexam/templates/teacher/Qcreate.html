@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz Create</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='QCreate.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="top">
+
+        <ul>
+            <li style="float:left;">
+                <a href="http://127.0.0.1:5000/teacher"><img src="{{ url_for('static', filename='home.png') }}" style="width:40px; height: 30px;"></a>
+            </li>
+            <li style="margin: -5rem 80rem;">
+                <a href="http://127.0.0.1:5000/logout"><input type="button" value="Logout" name="logout"></a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="Form">
+        <form name="QuizForm" action="Qcreate" method="POST">
+
+            <div class="err_msg" style="text-align: center;">{{ msg }}</div>
+
+            <label>
+                <p style="display: inline-block;">Quiz Code : {{ code }} </p>
+            </label><br>
+
+            <label>
+                <p style="display: inline-block;">Teacher ID : {{ id }} </p>
+            </label><br>
+
+            <label>
+                <p style=" display: inline-block;">Quiz Title :</p>
+            </label><br>
+            <input type="text" id="title" name="title"><br>
+
+            <label for="branch">
+                <p style=" display: inline-block;">Branch :</p>
+            </label>
+            <select id="branch" name="branch">
+                <option value="select">Select</option>
+                <option value="Electrical Engineering">(EE) Electrical Engineering</option>
+                <option value="Electronics and Telecommunication Engineering">(EXTC) Electronics and Telecommunication
+                    Engineering</option>
+                <option value="Civil Engineering">(CE) Civil Engineering(CE)</option>
+                <option value="Computer Science & Engineering">(CS) Computer Science & Engineering</option>
+                <option value="Information and Technology">(IT) Information and Technology</option>
+                <option value="Mechanical Engineering">(ME) Mechanical Engineering</option>
+            </select>
+            <br>
+            <label>
+                <p>Semester :</p>
+            </label>
+            <input type="text" id="sem" name="sem"><br>
+
+            <label>
+                <p style=" display: inline-block;">Subject: </p>
+            </label><br>
+            <input type="text" id="subject" name="subject"><br>
+
+            <label>
+                <p style=" display: inline-block;">No. of Questions: </p>
+            </label><br>
+            <input type="text" id="questions" name="questions"><br>
+
+            <label>
+                <p style=" display: inline-block;">Date :</p>
+            </label><br>
+            <input type="date" id="date" name="date">
+            <br>
+
+            <label>
+                <p style=" display: inline-block;">Start Time :</p>
+            </label><br>
+            <input type="time" id="start_time" name="start_time">
+
+            <label>
+                <p style=" display: inline-block;">Duration: <span style="color:red"> (HH:MM) </span></p>
+            </label><br>
+            <input type="text" id="end_time" name="end_time"><br>
+
+            <input type="submit" value="Submit" name="submit">
+            <br><br><br><br>
+        </form>
+    </div>
+    <script>
+    </script>
+</body>
+
+</html>

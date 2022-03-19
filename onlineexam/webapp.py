@@ -38,10 +38,9 @@ def printAllRecords():
         return record_images
 
 
-@app.route("/")
+@app.route('/')
 def home():
-    print("redirected")
-    return render_template("index.html")
+    return render_template('HomePage.html')
 
 
 @app.route("/face_detect", methods=["POST"])

@@ -1,0 +1,249 @@
+body{
+    background : rgb(255, 255, 255);
+    background-size:100%;
+    
+  }
+  #close{
+      color: #ffffff;
+      background-color:#2699FB ;
+      margin-top: 10px;
+      padding-bottom: 5rem;
+      margin-left: 10rem;
+     font-size: 2rem;
+  }
+  ul {
+    list-style-type: none;
+    margin: -10px;
+    width: 94.4rem;
+    padding: 0px 0px 0px 10px;
+    overflow: hidden;
+    background:#061f35;
+    border-radius: 0px;
+    position:relative;
+    
+    }
+    
+    li {
+    float: left;
+    }
+    
+    li a {
+    display: block;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    font-size: 2.3rem;
+    padding: 14px 16px;
+    text-decoration: none;
+    }
+
+  p{
+    font-size: 19px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    color: #192036;
+  }
+
+  .Form
+{
+  width: 550px;
+  height: 600px;
+padding: 40px;
+position: absolute;
+top: 65%;
+left: 50%;
+transform: translate(-50%,-50%);
+background: #ffffff;
+text-align: left;
+border-radius: 0px ;
+opacity:0.95;
+
+
+}
+.err_msg
+{
+  color:#f75c5c;
+  font-family: 'Raleway', sans-serif;
+  font-size:15px;
+  font-weight: bold;
+}
+
+input[type=text]
+{
+
+background:  #ffffff ;
+display: block;
+text-align: left;
+font-family: 'Raleway', sans-serif;
+font-size: 18px;
+font-weight: 1000;
+border: 1px solid #535c5c;
+padding: 9px;
+width: 35rem;
+outline: none;
+color: rgb(41, 38, 38);
+border-radius: 4px;
+
+}
+
+
+input[type = "text"]:focus
+{
+border-color: #0e7cd6 ;
+text-align: left;
+
+}
+
+
+
+input[type=file]
+{
+
+background:  #ffffff ;
+display: block;
+text-align: left;
+font-family: 'Raleway', sans-serif;
+font-size: 18px;
+font-weight: 1000;
+border: 1px solid #535c5c;
+padding: 9px;
+width: 35rem;
+outline: none;
+color: rgb(41, 38, 38);
+border-radius: 4px;
+
+}
+input[type = "file"]:focus
+{
+border-color: #0e7cd6 ;
+text-align: left;
+
+}
+
+input[type = "submit"]
+{
+    background:#0e7cd6 ;
+    display: block;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 1000;
+    border: 1px solid ;
+    padding: 14px;
+    width: 10rem;
+    outline: none;
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+    float: right;
+
+}
+
+input[type = "submit"]:hover
+{
+ background-color: rgb(9, 209, 9);
+}
+
+
+
+
+#answer{
+    background:  #ffffff ;
+    display: block;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    font-size: 17px;
+    font-weight: 1000;
+    border: 1px solid #535c5c;
+    padding: 10px;
+    width: 28rem;
+    outline: none;
+    color: rgb(41, 38, 38);
+    border-radius: 4px;
+  }
+
+  #answer:focus{
+    border-color: #0e7cd6;
+  }
+  
+
+  input[type = "button"]
+{
+    margin-top: 10px;
+    background:#19b405 ;
+    border-color: #19b405 ;
+    display: block;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 15px;
+    font-weight: 1000;
+    padding: 11px;
+    width: 7rem;
+    outline: none;
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+    float: right;
+
+}
+input[type = "button"]:hover
+{
+    background-color: rgb(199, 196, 10);
+    border-color: rgb(199, 196, 10); ;
+}
+
+#question{
+    background:  #ffffff ;
+display: block;
+text-align: left;
+font-family: 'Raleway', sans-serif;
+font-size: 18px;
+font-weight: 1000;
+border: 1px solid #535c5c;
+padding: 9px;
+width: 15rem;
+outline: none;
+color: rgb(41, 38, 38);
+border-radius: 4px;
+
+  }
+
+#option{
+  background:  #ffffff ;
+  display: block;
+  text-align: left;
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  font-weight: 1000;
+  border: 1px solid #535c5c;
+  padding: 9px;
+  width: 28rem;
+  outline: none;
+  color: rgb(41, 38, 38);
+  border-radius: 4px;  
+}
+
+#option:focus{
+  border-color: #0e7cd6;  
+}
+
+#add
+{
+    background:#0e7cd6 ;
+    display: block;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 1000;
+    border: 1px solid ;
+    padding: 14px;
+    width: 10rem;
+    outline: none;
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+    float: right;
+
+}
+
+#add:hover
+{
+ background-color: rgb(9, 209, 9);
+}

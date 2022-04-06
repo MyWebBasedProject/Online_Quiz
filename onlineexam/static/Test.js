@@ -1,11 +1,54 @@
-var count = 0;
+    var count = 0;
+    var socket;
+    
+    showQuestions();
 
-    function showViewButton()
+    //console.log("Show Questions");
+    function showQuestions()
     {
-        $("#viewExamButton").show();
-        $("#endExamButton").hide();
+        $(".questions").children().remove();
+        $.ajax({
+            url: "/get_questions",
+            type: "POST",
+            success: function(data)
+            {
+            var num = 1;
+                for(var key in data)
+                {
+                    $(".questions").append("<p>" + data[key]['question']
+                    + "</p> <br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 1
+                    + "><label for=\"option1\">" +  data[key]['option_1'] + "</label>"
+                    + "<br> <input type=\"radio\"  name=\"question_" + num + "\" value=" + 2
+                    + "><label for=\"option2\">" +  data[key]['option_2'] + "</label>"
+                    + "<br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 3
+                    + "><label for=\"option3\">" +  data[key]['option_3'] + "</label>"
+                    + "<br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 4
+                    + "><label for=\"option4\">" +  data[key]['option_4'] + "</label> <br><br>" );
+
+                    ++num;
+                }
+            }
+
+
+        });
     }
 
+        var clickedSubmit = false;
+        function closeCamera()
+            {
+
+                    $.ajax({
+                        url: "/camera_close",
+                        type: "POST",
+                        timeout:3000
+                    });
+            }
+
+
+        window.onbeforeunload = function(event){
+            socket.disconnect();
+            closeCamera();
+        }
     $(document).ready(function(){
 
         function takeScreenShot()
@@ -21,9 +64,11 @@ var count = 0;
             });
         }
 
-        var socket = io.connect('http://127.0.0.1:5000/')
 
+
+        socket = io.connect('http://127.0.0.1:5000/')
         console.log(socket);
+        socket.emit('violation');
 
         document.addEventListener('visibilitychange', function(e) {
             if(document.visibilityState === "hidden")
@@ -37,9 +82,9 @@ var count = 0;
         });
 
         socket.on('detect_person_mobile',function(person, mobile, correct_person){
-           //document.getElementById("mobile").innerHTML = "Number of Mobiles: " + mobile;
-           //document.getElementById("person").innerHTML = "Number of Persons: " + person;
-           //document.getElementById("correct_person").innerHTML = "Correct Person: " + correct_person;
+//           document.getElementById("mobile").innerHTML = "Number of Mobiles: " + mobile;
+//           document.getElementById("person").innerHTML = "Number of Persons: " + person;
+//           document.getElementById("correct_person").innerHTML = "Correct Person: " + correct_person;
         });
 
 
@@ -52,15 +97,6 @@ var count = 0;
 
         socket.on('number_of_violation', function(no_violation){
             //document.getElementById("violation").innerHTML = "Number  Of Violations Performed: " + no_violation;
-        });
-
-        $("#startButton").on('click',function(){
-            socket.emit('violation');
-        });
-
-        $('#endExamButton').on('click',function(){
-            socket.emit('close_camera');
-            showViewButton();
         });
 
     });

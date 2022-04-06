@@ -245,13 +245,13 @@ def Quiz():
 		name = "%s%s"%(code,qno)
 		question_code = remove(name)
 		if answer == "option_1":
-			answer = option_1
+			answer = "1"
 		elif answer == "option_2":
-			answer = option_2
+			answer = "2"
 		elif answer == "option_3":
-			answer = option_3
+			answer = "3"
 		elif answer == "option_4":
-			answer = option_4
+			answer = "4"
 		if image:
 			filename = secure_filename(question_code)
 			image.save(os.path.join(app.config['question_image'], filename))

@@ -1,5 +1,5 @@
-from flask import render_template, request
-from onlineexam import app, viewReport, mydb
+from flask import render_template, request, session
+from onlineexam import app, viewReport, mydb, quiz
 import pyautogui
 import time
 
@@ -11,11 +11,15 @@ def takeScreenShot():
         time.sleep(0.15)
         img = pyautogui.screenshot()
         myCursor = mydb.connection.cursor()
-        path = "static/temp_report/Switched_Application/" + str(count) + ".png"
-        img.save('onlineexam/' + path)
-        myCursor.execute(
-            'INSERT INTO temp_report(message, screenshot, violationTime) VALUES (%s, %s, %s)', ('Switched_Application', path, 1,))
-        mydb.connection.commit()
+        img_name = str(count) + ".png"
+
+        path = "static/" + session['code'] + "/"+ session['email'] +  "/Switched_Application/"
+        img.save('onlineexam/' + path + img_name)
+        violationTime = 1
+        sql_query = 'INSERT INTO ' + session['code'] +  '_report (message, screenshot, violationTime) VALUES (Switched_Application,' + path +', ' + str(violationTime) +')'
+        #print(sql_query)
+        #myCursor.execute(sql_query)
+        #mydb.connection.commit()
         myCursor.close()
         return "1"
 
@@ -24,7 +28,7 @@ def takeScreenShot():
 def printAllRecords():
     if request.method == "POST":
         message = request.form['option']
-        print(message)
+        #print(message)
         records_images_tuple = viewReport.getViolationAndImage(message)
         record_images = {}
         for i in records_images_tuple:

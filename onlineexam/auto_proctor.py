@@ -6,7 +6,9 @@ import numpy as np
 import math
 import time
 import MySQLdb
-from onlineexam import socketio, threaded_backend
+from flask import request
+
+from onlineexam import socketio, threaded_backend, quiz, app
 
 img_count = 0  # This is count violation images inserted in database.
 cap = cv2.VideoCapture(0)  # Reading webcam
@@ -16,7 +18,6 @@ detector = dlib.get_frontal_face_detector()  # used to detect face.
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 violation_done = 0
-
 correct_person = [False]
 persons = 0
 mobiles = 0
@@ -42,9 +43,9 @@ refEncode = face_recognition.face_encodings(imgMridul)[0]
 # refEncode = face_recognition.face_encodings(imgRdj)[0]
 
 
+
 def insert_Image(backendInstance, message, frame, mydb, violationTime):
     global img_count
-
     message_path = ''
     for i in message:
         if i == ' ':
@@ -52,23 +53,30 @@ def insert_Image(backendInstance, message, frame, mydb, violationTime):
         else:
             message_path += i
 
-    path = "static/temp_report/" + \
-        str(message_path)+"/" + str(img_count)+".png"
-    cv2.imwrite("onlineexam/" + path, frame)
-    backendInstance.insert_message(message, path, mydb, violationTime)
-    img_count += 1
+    path = "static/" + quiz.quiz_code + "/" + quiz.student_email +"/"+ str(message_path)+"/" + str(img_count)+".png"
+    if quiz.student_email != "" and violationTime>0:
+        cv2.imwrite("onlineexam/" + path, frame)
+        #print(path)
+        backendInstance.insert_message(message, path, mydb, violationTime)
+        img_count += 1
 
 
 def check_correct_person():
     global correct_person
+    face = True
     while True:
         correct, frame = cap.read()
-        face_locations = face_recognition.face_locations(frame)
-        if len(face_locations) == 1:
-            face_encodes = face_recognition.face_encodings(
-                frame, face_locations)
-            correct_person = face_recognition.compare_faces(
-                refEncode, face_encodes)
+        try:
+            face_locations = face_recognition.face_locations(frame)
+        except Exception as error:
+            face = False
+
+        if face:
+            if len(face_locations) == 1:
+                face_encodes = face_recognition.face_encodings(
+                    frame, face_locations)
+                correct_person = face_recognition.compare_faces(
+                    refEncode, face_encodes)
         if cv2.waitKey(3000) & canBreak == True:
             break
 
@@ -206,7 +214,7 @@ def face_area(frame, x1, y1, x2, y2):
 
 def detect_person_mobile(backendInstance):
     global persons, mobiles, canBreak, correct_person, violation_done, no_other_violations, no_violation_mobile
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='exam')
+    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
 
     not_doing_person_violation = True
     not_doing_mobile_violation = True
@@ -315,7 +323,7 @@ def violation(backendInstance):
     violation_eye_direction_image = None
     violation_correct_person_image = None
 
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='exam')
+    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
     start_time = 0
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format
@@ -342,7 +350,6 @@ def violation(backendInstance):
                 insert_Image(backendInstance, 'No Face Detected', violation_no_face_image, mydb, total_time)
 
             elif face_count==1 and persons == 1 and not_doing_face_violation == True:
-                # print('no problem')
                 face = faces[0]
                 x1, y1 = face.left(), face.top()
                 x2, y2 = face.right(), face.bottom()
@@ -398,7 +405,7 @@ def violation(backendInstance):
                                 insert_Image(backendInstance, violation_msg, violation_eye_direction_image, mydb, total_time)
 
                             elif gaze_detection_check == True and not_doing_eye_direction_violation == True:
-                                print("no problem")
+                                pass
 
                     elif face_perimenter < 400:
                         cv2.putText(frame, str("Face too far"), (100, 200),
@@ -440,9 +447,16 @@ def start_violation():
     t3.join()
 
 
-@socketio.on('close_camera')
+@app.route('/camera_close', methods=['GET', 'POST'])
 def close_camera():
-    cap.release()
-    cv2.destroyAllWindows()
-    global canBreak
-    canBreak = True
+    #pdb.set_trace()
+    if request.method == "POST":
+        print("Close")
+        global canBreak
+        canBreak = True
+        print("Close Camera")
+        cap.release()
+        cv2.destroyAllWindows()
+        print("Closed EveryThing")
+        return ""
+

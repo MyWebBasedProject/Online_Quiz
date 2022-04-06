@@ -50,8 +50,8 @@
 
             function showViolations()
             {
-                console.log(option);
-                console.log("Called Show Violations");
+                //console.log(option);
+                //console.log("Called Show Violations");
                 $(".record-table tbody").children().remove();
                 $.ajax({
                     url: "/show_records_and_images",
@@ -59,10 +59,10 @@
                     data: {'option': option},
                     success: function(data)
                     {
-                        console.log(Object.keys(data).length);
+                        //console.log(Object.keys(data).length);
                         for(var key in data)
                         {
-                            console.log(data[key]["image"]);
+                            //console.log(data[key]["image"]);
 
                             $(".record-table tbody").append("<tr><td>" + data[key]['message'] + "</td><td>" + data[key]['time'] + "</td><td> " + "<img src=" + data[key]['image'] + " width= 25% height= 25%;>" + "</td><td>" + data[key]['duration'] + "</td></tr>" );
                         }

@@ -18,13 +18,13 @@ student_email = ""
 quiz_code = 0
 student_id = 0
 
+
 def executeInsertSQL(sql_query, data):
     myCursor = mydb.connection.cursor()
     myCursor.execute(sql_query, data)
     quiz_details = myCursor.fetchall()
     myCursor.close()
     return quiz_details
-
 
 
 def remove(string):
@@ -195,14 +195,14 @@ def quiz_created():
     return render_template("quiz_created.html")
 
 
-@app.route('/get_quiz_details', methods = ['GET', 'POST'])
+@app.route('/get_quiz_details', methods=['GET', 'POST'])
 def get_quiz_details():
     if request.method == "POST":
         sql_query = "SELECT code, title, branch, sem, subject, date FROM quiz_details WHERE teacher_id=%s"
         data = [session['id']]
 
         quiz_details_dictionary = {}
-        j=1
+        j = 1
         quiz_details = executeInsertSQL(sql_query, data)
         print(quiz_details)
         for i in quiz_details:
@@ -214,8 +214,9 @@ def get_quiz_details():
                 "subject": str(i[4]),
                 "date": str(i[5])
             }
-            j+=1
+            j += 1
         return quiz_details_dictionary
+
 
 @app.route('/student', methods=['GET', 'POST'])
 def student():
@@ -269,7 +270,7 @@ def QCreate():
 				option_2 varchar(1000), 
 				option_3 varchar(1000), 
 				option_4 varchar(1000), 
-				answer int(10))""" )
+				answer int(10))""")
             mydb.connection.commit()
             createAutoProctorTable(code)
             cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, %s, %s, %s)',
@@ -322,13 +323,13 @@ def Quiz():
         name = "%s%s" % (code, qno)
         question_code = remove(name)
         if answer == "option_1":
-            answer = option_1
+            answer = 1
         elif answer == "option_2":
-            answer = option_2
+            answer = 2
         elif answer == "option_3":
-            answer = option_3
+            answer = 3
         elif answer == "option_4":
-            answer = option_4
+            answer = 4
         if image:
             filename = secure_filename(question_code)
             image.save(os.path.join(app.config['question_image'], filename))
@@ -436,13 +437,12 @@ def response_submitted():
 
         table_name = str.lower(str(quiz_code))
         for i in range(1, session['no_of_questions']+1):
-            data = (selected_answers[i] , str.upper(str(quiz_code))+str(i))
+            data = (selected_answers[i], str.upper(str(quiz_code))+str(i))
             sql_query = f"UPDATE `{table_name}` SET `{student_id}` = %s WHERE question_code = %s "
-            myCursor.execute(sql_query, data )
+            myCursor.execute(sql_query, data)
             myCursor.connection.commit()
         myCursor.close()
         return render_template("responseSubmitted.html")
-
 
 
 @app.route('/student/StartQuiz', methods=['GET', 'POST'])
@@ -482,7 +482,7 @@ def createFoldersForViolations(code):
     parent_dir = "onlineexam/static/"
     directory = code+"/" + student_email
     path = os.path.join(parent_dir, directory)
-    #print(os.path.isfile(path))
+    # print(os.path.isfile(path))
     if os.path.isdir(path):
         return
 
@@ -519,7 +519,7 @@ def Test():
     return render_template('student/Test.html', date=date, duration=duration, data=data, start=start, n=n)
 
 
-@app.route('/get_questions', methods=['GET','POST'])
+@app.route('/get_questions', methods=['GET', 'POST'])
 def getQuestions():
     if request.method == "POST":
         myCursor = mydb.connection.cursor()

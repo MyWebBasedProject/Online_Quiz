@@ -11,7 +11,7 @@ from flask import request
 from onlineexam import socketio, threaded_backend, quiz, app
 
 img_count = 0  # This is count violation images inserted in database.
-cap = cv2.VideoCapture(0)  # Reading webcam
+cap = ""
 
 detector = dlib.get_frontal_face_detector()  # used to detect face.
 # loading shape predictor.
@@ -37,11 +37,6 @@ output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
 imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
 refEncode = face_recognition.face_encodings(imgMridul)[0]
-
-# imgRdj = face_recognition.load_image_file("onlineexam\images\_rdj.jpg")
-# imgRdj = cv2.cvtColor(imgRdj, cv2.COLOR_BGR2RGB)
-# refEncode = face_recognition.face_encodings(imgRdj)[0]
-
 
 
 def insert_Image(backendInstance, message, frame, mydb, violationTime):
@@ -223,6 +218,7 @@ def detect_person_mobile(backendInstance):
     start_time_person = 0
     start_time_mobile = 0
 
+    print("canBreak: " + str(canBreak) + " violation_done: " + str(violation_done) + " ")
     while True:  # and time.time()>(last_time + 3):
         if correct_person[0] == True:
             str_correct_person = True
@@ -329,6 +325,8 @@ def violation(backendInstance):
         correct, frame = cap.read()  # normal image capture in RGB format
 
         if correct:
+            print("Reading camera")
+
             frame = cv2.flip(frame, 1)
 
             # convert to gray image
@@ -431,8 +429,22 @@ def violation(backendInstance):
                 break
 
 
+def initializeVariables():
+    global canBreak, cap, correct_person, persons, mobiles, eye_direction, face_direction, face_count
+
+    cap = cv2.VideoCapture(0)  # Reading webcam
+    correct_person = [False]
+    persons = 0
+    mobiles = 0
+    eye_direction = "center"
+    face_direction = "center"
+    face_count = 0
+    canBreak = False
+
 @socketio.on('violation')
 def start_violation():
+
+    initializeVariables()
     backendInstance = threaded_backend.BackendOperations()
     t1 = threading.Thread(target=detect_person_mobile, args=(backendInstance,))
     t2 = threading.Thread(target=violation, args=(backendInstance,))
@@ -445,6 +457,7 @@ def start_violation():
     t1.join()
     t2.join()
     t3.join()
+    print("Threads Closed")
 
 
 @app.route('/camera_close', methods=['GET', 'POST'])

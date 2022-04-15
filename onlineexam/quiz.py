@@ -8,6 +8,7 @@ import MySQLdb.cursors
 import re
 import random
 import string
+import cv2, face_recognition
 
 from PIL import Image
 import io
@@ -142,6 +143,9 @@ def StudentSignUp():
         branch = request.form['branch']
         semester = request.form['semester']
         profile_pic = request.files['profile_pic']
+        # imgMridul = cv2.cvtColor(profile_pic, cv2.COLOR_BGR2RGB)
+        # refEncode = face_recognition.face_encodings(imgMridul)[0]
+        # if refEncode.size == 0:
 
         if not first_name or not last_name or not middle_name or not dob or not email or not password or not c_password or not branch or not semester or not profile_pic:
             msg = 'Please fill out the form !'
@@ -161,15 +165,17 @@ def StudentSignUp():
                 msg = "Paswords doesn't match"
                 return render_template('Register/StudentSignUp.html', msg=msg)
             else:
-                name = '%s%s%s' % (first_name, middle_name, last_name)
+                id = random.randint(0000, 9999)
+                name = '%s%s%s_%s.%s' % (first_name, middle_name, last_name, id, "png")
                 name = remove(name)
                 filename = secure_filename(name)
                 profile_pic.save(os.path.join(app.config['student'], filename))
-                profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s.jpeg" % (
+                profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s" % (
                     name)
-                id = random.randint(0000, 9999)
-                cursor.execute('INSERT INTO student VALUES (%s, %s, % s, % s, % s, % s, % s, % s, %s, %s)',
-                               (id, profile_pic, first_name, last_name, middle_name, dob, email, password, branch, semester, ))
+                print(profile_pic)
+                sql_query = f"INSERT INTO student VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                data = [id, profile_pic, first_name, last_name, middle_name, dob, email, password, branch, semester]
+                cursor.execute(sql_query, data)
                 mydb.connection.commit()
                 msg = '%s %s, you have successfully registered ! Your Id is %s' % (
                     first_name, last_name, id)

@@ -9,7 +9,6 @@ import re
 import random
 import string
 import cv2, face_recognition
-
 from PIL import Image
 import io
 import urllib.request
@@ -31,6 +30,9 @@ def executeInsertSQL(sql_query, data):
 def remove(string):
     return string.replace(" ", "")
 
+@app.route('/', methods=['GET', 'POST'])
+def HomePage():
+    return render_template('HomePage.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -61,26 +63,19 @@ def login():
                     global student_id
                     student_id = session['id']
                     return redirect(url_for("student"))
-
                 else:
                     return redirect(url_for("teacher"))
             else:
                 msg = 'Invalid Password'
-                return render_template('Homepage.html', msg=msg)
+                return render_template('login.html', msg=msg)
         else:
             msg = 'Register first!'
-            return render_template('HomePage.html', msg=msg)
-
-
-@app.route('/forgot')
-def forgot():
-    return render_template('forgot.html')
-
+            return render_template('login.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 @app.route('/Register')
 def register():
     return render_template('Register.html')
-
 
 @app.route('/Register/TeacherSignUp', methods=['GET', 'POST'])
 def TeacherSignUp():
@@ -128,7 +123,6 @@ def TeacherSignUp():
                 return redirect(url_for("home"))
     return render_template('Register/TeacherSignUp.html', msg=msg)
 
-
 @app.route('/Register/StudentSignUp', methods=['GET', 'POST'])
 def StudentSignUp():
     msg = ''
@@ -143,10 +137,6 @@ def StudentSignUp():
         branch = request.form['branch']
         semester = request.form['semester']
         profile_pic = request.files['profile_pic']
-        # imgMridul = cv2.cvtColor(profile_pic, cv2.COLOR_BGR2RGB)
-        # refEncode = face_recognition.face_encodings(imgMridul)[0]
-        # if refEncode.size == 0:
-
         if not first_name or not last_name or not middle_name or not dob or not email or not password or not c_password or not branch or not semester or not profile_pic:
             msg = 'Please fill out the form !'
             return render_template('Register/StudentSignUp.html', msg=msg)
@@ -172,10 +162,8 @@ def StudentSignUp():
                 profile_pic.save(os.path.join(app.config['student'], filename))
                 profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s" % (
                     name)
-                print(profile_pic)
-                sql_query = f"INSERT INTO student VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                data = [id, profile_pic, first_name, last_name, middle_name, dob, email, password, branch, semester]
-                cursor.execute(sql_query, data)
+                cursor.execute('INSERT INTO student VALUES (%s, %s, % s, % s, % s, % s, % s, % s, %s, %s)',
+                               (id, profile_pic, first_name, last_name, middle_name, dob, email, password, branch, semester, ))
                 mydb.connection.commit()
                 msg = '%s %s, you have successfully registered ! Your Id is %s' % (
                     first_name, last_name, id)
@@ -198,8 +186,27 @@ def teacher():
 
 @app.route('/quiz_created')
 def quiz_created():
-    return render_template("quiz_created.html")
+    id = session['id']
+    cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    n = cursor.rowcount
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    row = cursor.fetchall()
+    return render_template("quiz_created.html", data=row, n=n)
 
+@app.route('/quiz_report', methods=['GET', 'POST'])
+def quiz_report():
+    if "report" in request.form:
+        code = request.form['report']
+        branch = request.form['branch']
+        sem = request.form['sem']
+        cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM student where branch = %s and semester = %s", (branch, sem, ))
+        n = n = cursor.rowcount
+        cursor.execute("SELECT * FROM student where branch = %s and semester = %s", (branch, sem, ))
+        details = cursor.fetchall()
+        return render_template("quiz_report.html", code=code, data=details, n=n)
+    return render_template("quiz_report.html")
 
 @app.route('/get_quiz_details', methods=['GET', 'POST'])
 def get_quiz_details():
@@ -470,7 +477,6 @@ def StartQuiz():
                 return render_template('student/StartQuiz.html', msg=msg)
             else:
                 session['code'] = code
-                # print(session['semester'])
                 if data['sem'] != session['semester']:
                     msg = "Not Correct Semester"
                     return render_template('student/StartQuiz.html', msg=msg)
@@ -521,7 +527,6 @@ def Test():
 
     cursor.execute("SELECT * FROM "+code)
     data = cursor.fetchall()
-
     return render_template('student/Test.html', date=date, duration=duration, data=data, start=start, n=n)
 
 

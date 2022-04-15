@@ -30,6 +30,7 @@
     </div>
     <div class="Card1">
         {% for i in range (0,n): %} {% if data: %}
+        <br><br>
         <label><p style="display: inline-block;">Quiz Code: {{data[i]['code']}}</p></label><br>
         <label><p style="display: inline-block;">Subject: {{data[i]['subject']}}</p></label><br>
         <label><p style=" display: inline-block;">Title: {{data[i]['title']}}</p></label><br>
@@ -37,7 +38,7 @@
         <label><p style=" display: inline-block;">Schduled On: {{data[i]['date']}} {{data[i]['start_time']}}</p></label><br>
         <label><p style=" display: inline-block;">Duration: {{data[i]['duration']}}</p></label>
         <form action="teacher/Modify"><input id="modify" type="hidden" name="modify" value="{{data[i]['code']}}">
-            <button type=submit>Modify</button></form>{% endif %} {% endfor %}
+            <button type=submit>Modify</button></form><br><br><br>{% endif %} {% endfor %}
     </div>
     <div class="err_msg" style="text-align: center;">{{ msg }}</div>
 </body>

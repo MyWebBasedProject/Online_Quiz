@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='HomePage.css') }}">
+</head>
+
+<body>
+    <div class="top">
+
+        <ul>
+            <li style="float:left;"><a href="http://127.0.0.1:5000">Home</a></li>
+            <li style="float: left;"><a href="#about">About</a></li>
+        </ul>
+    </div>
+    <div class="LoginForm">
+        <form name="homePageForm" onsubmit="return validateForm()" action="http://127.0.0.1:5000/login" method="POST">
+            <div class=" bg-indigo-400 rounded-t-md"></div>
+            <div class="EmailId">
+                <label for="email"><p>Email ID</p></label>
+                <input type="email" id="email" name="email">
+                <p class="err_msg" id="email_info"> </p>
+
+            </div>
+            <div class="password">
+                <label for="password"><p >Password</p></label>
+                <input type="password" id="password" name="password">
+                <p class="err_msg" id="password_info"> </p>
+
+            </div>
+            <p>Sign Up As:</p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="category" id="teacher" value="teacher">Teacher
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="category" id="student" value="student">Student<br>
+            <p class="err_msg" id="category_info"> </p>
+            <div class="err_msg" style="text-align: center;">{{ msg }}</div>
+            <div class="Buttons">
+
+                <input id="login" type="submit" value="Log In"><br>
+
+
+                <p style="text-align: center;"><a href='Register'>Register here</a></p>
+
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='HomePage.js') }}"></script>
+</body>
+
+</html>

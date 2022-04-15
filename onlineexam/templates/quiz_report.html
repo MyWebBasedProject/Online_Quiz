@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>{{code}} Report</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='quizreport.css') }}">
+{% endblock %}
+{% block body %}
+<table class="record-table">
+    <thead>
+      <tr>
+          <th>Student ID</th>
+          <th>Name</th>
+          <th>Marks</th>
+          <th>Trust Score</th>
+          <th>Exam Report</th>
+          <th>Proctor Report</th>
+          <th>Result</th>
+      </tr>
+    </thead>
+    {% for i in range (0,n): %} {% if data: %}
+    <tbody>
+        <td>{{data[i]['id']}}</td>
+        <td>{{data[i]['first_name']}} {{data[i]['middle_name']}} {{data[i]['last_name']}}</th>
+        <td>Marks</td>
+        <td>Trust Score</td>
+        <td> <form action="/exam_report" method="POST"><input id="exam_report" type="hidden" name="exam_report" value="{{data[i]['id']}}">
+            <input type="submit" value="View" name="Exam Report"></form></td>
+        <td> <form action="/proctor_report" method="POST"><input id="proctor_report" type="hidden" name="proctor_report" value="{{data[i]['id']}}">
+            <input type="submit" value="View" name="Proctor Report"></form></td>
+        <td>Result</td>
+    </tbody>
+    {% endif %} {% endfor %}
+</table>
+{% endblock %}

@@ -194,6 +194,7 @@ def quiz_created():
     row = cursor.fetchall()
     return render_template("quiz_created.html", data=row, n=n)
 
+
 @app.route('/quiz_report', methods=['GET', 'POST'])
 def quiz_report():
     if "report" in request.form:
@@ -205,6 +206,7 @@ def quiz_report():
         n = n = cursor.rowcount
         cursor.execute("SELECT * FROM student where branch = %s and semester = %s", (branch, sem, ))
         details = cursor.fetchall()
+        session['report_code'] = code
         return render_template("quiz_report.html", code=code, data=details, n=n)
     return render_template("quiz_report.html")
 

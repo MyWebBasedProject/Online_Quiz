@@ -1,6 +1,8 @@
     var count = 0;
     var socket;
-    
+    var seconds = 0;
+    var screenChanged = 0;
+
     showQuestions();
 
     //console.log("Show Questions");
@@ -37,7 +39,6 @@
         var clickedSubmit = false;
         function closeCamera()
             {
-
                     $.ajax({
                         url: "/camera_close",
                         type: "POST",
@@ -54,6 +55,7 @@
 
         function takeScreenShot()
         {
+
             $.ajax({
                 url: "/take_screenShot",
                 type: "POST",
@@ -74,13 +76,36 @@
         document.addEventListener('visibilitychange', function(e) {
             if(document.visibilityState === "hidden")
             {
-                console.log(document.hasFocus());
                 takeScreenShot();
-                count = count + 1;
-                //document.getElementById("canSee").innerHTML = "Number of times application switched: " + count;
+                ++screenChanged;
+                if(screenChanged>1)
+                {
 
+                    closeCamera();
+                    setTimeout(function(){window.close()}, 3000);
+
+                }
+                setInterval(incrementSeconds, 1000);
+                count = count + 1;
+            }
+            else
+            {
+                clearInterval(incrementSeconds, 1000);
+                if(seconds >= 3)
+                {
+                    closeCamera();
+                    setTimeout(function(){window.close()}, 3000);
+
+                }
+                seconds = 0;
             }
         });
+
+    function incrementSeconds() {
+        seconds += 1;
+    }
+
+
 
         socket.on('detect_person_mobile',function(person, mobile, correct_person){
 //           document.getElementById("mobile").innerHTML = "Number of Mobiles: " + mobile;

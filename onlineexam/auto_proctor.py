@@ -49,7 +49,7 @@ def insert_Image(backendInstance, message, frame, mydb, violationTime):
             message_path += i
 
     path = "static/" + quiz.quiz_code + "/" + quiz.student_email +"/"+ str(message_path)+"/" + str(img_count)+".png"
-    if quiz.student_email != "" and violationTime>0:
+    if quiz.student_email != "" and violationTime>2:
         cv2.imwrite("onlineexam/" + path, frame)
         #print(path)
         backendInstance.insert_message(message, path, mydb, violationTime)

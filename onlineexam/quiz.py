@@ -176,10 +176,11 @@ def StudentSignUp():
 def teacher():
     id = session['id']
     profilepic = session['profile_pic']
+    date = datetime.date(datetime.now())
     cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s and date > %s", (id, date, ))
     n = cursor.rowcount
-    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s and date > %s", (id, date, ))
     row = cursor.fetchall()
     return render_template('teacher.html', details=profilepic, data=row, n=n)
 
@@ -238,12 +239,12 @@ def student():
     profilepic = session['profile_pic']
     branch = session['branch']
     semester = session['semester']
+    date = datetime.date(datetime.now())
     cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute(
-        "SELECT * FROM quiz_details where branch = %s and sem = %s", (branch, semester,))
+    cursor.execute("SELECT * FROM quiz_details where date > %s and branch = %s and sem = %s", (date, branch, semester, ))
     n = cursor.rowcount
     cursor.execute(
-        "SELECT * FROM quiz_details where branch = %s and sem = %s", (branch, semester,))
+        "SELECT * FROM quiz_details where date > %s and branch = %s and sem = %s", (date, branch, semester, ))
     row = cursor.fetchall()
     return render_template('student.html', details=profilepic, data=row, n=n)
 
@@ -286,6 +287,12 @@ def QCreate():
 				option_3 varchar(1000), 
 				option_4 varchar(1000), 
 				answer int(10))""")
+            mydb.connection.commit()
+            cursor.execute("CREATE TABLE IF NOT EXISTS " + code +
+                           """_result(student_id varchar(1000)  PRIMARY KEY,
+				exam_result varchar(1000), 
+				trust_score varchar(1000), 
+				result varchar(1000))""")
             mydb.connection.commit()
             createAutoProctorTable(code)
             cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, %s, %s, %s)',
@@ -569,6 +576,9 @@ def StartTest():
         start = test['start_time']
     return render_template('student/StartTest.html', start=start, date=date)
 
+@app.route('/test_report', methods=['GET', 'POST'])
+def Calculate():
+    return render_template('test_report.html')
 
 @app.route('/logout')
 def logout():

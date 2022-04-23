@@ -32,11 +32,11 @@ with open("onlineexam\yolov3\coco.names", "r") as f:
 net = cv2.dnn.readNet("onlineexam\yolov3\yolov3-spp.weights",
                       "onlineexam\yolov3\yolov3-spp.cfg")  # This is our ANN/model
 layers_names = net.getLayerNames()
-output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+output_layers = [layers_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
-imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
-imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
-refEncode = face_recognition.face_encodings(imgMridul)[0]
+#imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
+#imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
+#refEncode = face_recognition.face_encodings(imgMridul)[0]
 
 
 def insert_Image(backendInstance, message, frame, mydb, violationTime):
@@ -209,7 +209,7 @@ def face_area(frame, x1, y1, x2, y2):
 
 def detect_person_mobile(backendInstance):
     global persons, mobiles, canBreak, correct_person, violation_done, no_other_violations, no_violation_mobile
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
+    mydb = MySQLdb.connect(host='localhost', user='root', passwd='1234', db='project')
 
     not_doing_person_violation = True
     not_doing_mobile_violation = True
@@ -319,7 +319,7 @@ def violation(backendInstance):
     violation_eye_direction_image = None
     violation_correct_person_image = None
 
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
+    mydb = MySQLdb.connect(host='localhost', user='root', passwd='1234', db='project')
     start_time = 0
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format

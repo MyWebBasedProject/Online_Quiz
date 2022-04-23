@@ -19,7 +19,6 @@ def takeScreenShot():
         table = session['code']+'_report'
         sql_query = f'INSERT INTO `{table}`(message, screenshot, violationTime) VALUES (Switched_Application, %s, %s)'
         data = [path, violationTime]
-        print(sql_query)
         myCursor.execute(sql_query, data)
         mydb.connection.commit()
         myCursor.close()
@@ -60,16 +59,18 @@ def view_report_template():
         session["report_student_id"] = request.form["Proctor Report"]
         return render_template("proctor_report.html")
 
-@app.route("/calculate_trust_score", methods=["POST"])
-def calculate_trust_score():
+@app.route("/calculate_score", methods=["POST"])
+def calculate_score():
     if request.method == "POST":
         quiz_code = session['report_code']
-        sql_query = f"SELECT duration FROM quiz_details WHERE code= %s"
+        sql_query = f"SELECT duration,questions FROM quiz_details WHERE code= %s"
         data=[quiz_code]
         myCursor = mydb.connection.cursor()
         myCursor.execute(sql_query, data)
+        mydb.connection.commit()
         duration = myCursor.fetchone()
         total_time = duration[0].seconds
+        n = int(duration[1])
         time_in_seconds = viewReport.getViolationCount()
 
         violated_time = 0
@@ -77,7 +78,33 @@ def calculate_trust_score():
         for i in time_in_seconds:
             violated_time += i[0]
 
-
+        null = 0
+        marks = 0
+        result = " "
         trust_score = (violated_time/total_time)*100
-        myCursor.close()
-        return str(trust_score)
+        trust_score = 100 - trust_score
+        id = session['student_id']
+        sql_query = f"SELECT answer,%s FROM `{session['code']}`"
+        data=[quiz_code]
+        myCursor.execute(sql_query, data)
+        mydb.connection.commit()
+        answer = myCursor.fetchall()
+        for i in range (1,n+1):
+            if answer[i]['id'] == "NULL":
+                null+=1
+            elif answer[i]['answer'] == answer[i]['id']:
+                marks += 1
+        percent = (marks/n)*100
+        if null == n:
+            result == "FAIL"
+        if percent < 50 or trust_score < 90:
+            result = "FAIL"
+        else:
+            result = "PASS"
+        table = session['code']+'_answer'
+        trust_score = str(trust_score)
+        marks = str(marks)
+        sql_query = f"INSERT INTO `{table}` (student_id, exam_result, trust_score, result) VALUES (%s, %s, %s, %s)"
+        data=[quiz_code,marks,trust_score,result]
+        myCursor.execute(sql_query, data)
+        mydb.connection.commit()

@@ -30,6 +30,27 @@ body {
     font-weight: bold;
 }
 
+.weak-password{
+    color: #f75c5c;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.medium-password{
+    color: yellow;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.strong-password{
+    color: green;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 ul {
     list-style-type: none;
     margin: 0;

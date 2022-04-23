@@ -36,6 +36,7 @@
         });
     }
 
+    
         var clickedSubmit = false;
         function closeCamera()
             {
@@ -52,6 +53,8 @@
             closeCamera();
         }
     $(document).ready(function(){
+    
+
 
         function takeScreenShot()
         {

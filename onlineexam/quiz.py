@@ -8,7 +8,7 @@ import MySQLdb.cursors
 import re
 import random
 import string
-
+import cv2, face_recognition
 from PIL import Image
 import io
 import urllib.request
@@ -30,6 +30,9 @@ def executeInsertSQL(sql_query, data):
 def remove(string):
     return string.replace(" ", "")
 
+@app.route('/', methods=['GET', 'POST'])
+def HomePage():
+    return render_template('HomePage.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,26 +63,19 @@ def login():
                     global student_id
                     student_id = session['id']
                     return redirect(url_for("student"))
-
                 else:
                     return redirect(url_for("teacher"))
             else:
                 msg = 'Invalid Password'
-                return render_template('Homepage.html', msg=msg)
+                return render_template('login.html', msg=msg)
         else:
             msg = 'Register first!'
-            return render_template('HomePage.html', msg=msg)
-
-
-@app.route('/forgot')
-def forgot():
-    return render_template('forgot.html')
-
+            return render_template('login.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 @app.route('/Register')
 def register():
     return render_template('Register.html')
-
 
 @app.route('/Register/TeacherSignUp', methods=['GET', 'POST'])
 def TeacherSignUp():
@@ -112,13 +108,12 @@ def TeacherSignUp():
                 msg = "Passwords doesn't match"
                 return render_template('Register/TeacherSignUp.html', msg=msg)
             else:
-                name = '%s%s%s' % (first_name, middle_name, last_name)
+                id = random.randint(0000, 9999)
+                name = '%s%s%s_%s.%s' % (first_name, middle_name, last_name, id, "png")
                 name = remove(name)
                 filename = secure_filename(name)
                 profile_pic.save(os.path.join(app.config['teacher'], filename))
-                profile_pic = "http://127.0.0.1:5000/static/profilepics/teacher/%s.jpeg" % (
-                    name)
-                id = random.randint(0000, 9999)
+                profile_pic = "http://127.0.0.1:5000/static/profilepics/teacher/%s" % (name)
                 cursor.execute('INSERT INTO teacher VALUES (%s, %s, % s, % s, % s, % s, % s, % s)',
                                (id, profile_pic, first_name, last_name, middle_name, dob, email, password, ))
                 mydb.connection.commit()
@@ -126,7 +121,6 @@ def TeacherSignUp():
                     first_name, last_name, id)
                 return redirect(url_for("home"))
     return render_template('Register/TeacherSignUp.html', msg=msg)
-
 
 @app.route('/Register/StudentSignUp', methods=['GET', 'POST'])
 def StudentSignUp():
@@ -142,7 +136,6 @@ def StudentSignUp():
         branch = request.form['branch']
         semester = request.form['semester']
         profile_pic = request.files['profile_pic']
-
         if not first_name or not last_name or not middle_name or not dob or not email or not password or not c_password or not branch or not semester or not profile_pic:
             msg = 'Please fill out the form !'
             return render_template('Register/StudentSignUp.html', msg=msg)
@@ -161,13 +154,13 @@ def StudentSignUp():
                 msg = "Paswords doesn't match"
                 return render_template('Register/StudentSignUp.html', msg=msg)
             else:
-                name = '%s%s%s' % (first_name, middle_name, last_name)
+                id = random.randint(0000, 9999)
+                name = '%s%s%s_%s.%s' % (first_name, middle_name, last_name, id, "png")
                 name = remove(name)
                 filename = secure_filename(name)
                 profile_pic.save(os.path.join(app.config['student'], filename))
-                profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s.jpeg" % (
+                profile_pic = "http://127.0.0.1:5000/static/profilepics/student/%s" % (
                     name)
-                id = random.randint(0000, 9999)
                 cursor.execute('INSERT INTO student VALUES (%s, %s, % s, % s, % s, % s, % s, % s, %s, %s)',
                                (id, profile_pic, first_name, last_name, middle_name, dob, email, password, branch, semester, ))
                 mydb.connection.commit()
@@ -182,18 +175,68 @@ def StudentSignUp():
 def teacher():
     id = session['id']
     profilepic = session['profile_pic']
+    date = datetime.date(datetime.now())
+    cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s and date > %s" , (id, date, ))
+    n = cursor.rowcount
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s and date > %s", (id, date, ))
+    row = cursor.fetchall()
+    return render_template('teacher.html', details=profilepic, data=row, n=n)
+
+
+@app.route('/teacher/quiz_report')
+def quiz_report():
+    id = session['id']
     cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
     n = cursor.rowcount
     cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
     row = cursor.fetchall()
-    return render_template('teacher.html', details=profilepic, data=row, n=n)
+    return render_template("teacher/quiz_report.html", data=row, n=n)
 
 
-@app.route('/quiz_created')
-def quiz_created():
-    return render_template("quiz_created.html")
+@app.route('/teacher/proctor_report', methods=['GET', 'POST'])
+def proctor_report():
+    if "report" in request.form:
+        code = request.form['report']
+        branch = request.form['branch']
+        sem = request.form['sem']
+        cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM student where branch = %s and semester = %s", (branch, sem, ))
+        n = n = cursor.rowcount
+        cursor.execute("SELECT * FROM student where branch = %s and semester = %s", (branch, sem, ))
+        details = cursor.fetchall()
+        session['report_code'] = code
+        return render_template("teacher/proctor_report.html", code=code, data=details, n=n)
+    return render_template("teacher/proctor_report.html")
 
+@app.route('/teacher/quiz_report')
+def quizreport_teacher():
+    id = session['id']
+    cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    n = cursor.rowcount
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    row = cursor.fetchall()
+    return render_template("teacher/quiz_report.html", data=row, n=n)
+
+@app.route('/teacher/exam_report')
+def examreport_student():
+    return render_template("teacher/exam_report.html")
+
+@app.route('/student/quiz_report')
+def quizreport_student():
+    id = session['id']
+    cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    n = cursor.rowcount
+    cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
+    row = cursor.fetchall()
+    return render_template("student/quiz_report.html", data=row, n=n)
+
+@app.route('/student/exam_report')
+def examreport_student():
+    return render_template("student/exam_report.html")
 
 @app.route('/get_quiz_details', methods=['GET', 'POST'])
 def get_quiz_details():
@@ -223,12 +266,13 @@ def student():
     profilepic = session['profile_pic']
     branch = session['branch']
     semester = session['semester']
+    date = datetime.date(datetime.now())
     cursor = mydb.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute(
-        "SELECT * FROM quiz_details where branch = %s and sem = %s", (branch, semester,))
+        "SELECT * FROM quiz_details where (branch = %s and sem = %s) and date > %s" , (branch, semester, date, ))
     n = cursor.rowcount
     cursor.execute(
-        "SELECT * FROM quiz_details where branch = %s and sem = %s", (branch, semester,))
+        "SELECT * FROM quiz_details where (branch = %s and sem = %s) and date > %s", (branch, semester, date, ))
     row = cursor.fetchall()
     return render_template('student.html', details=profilepic, data=row, n=n)
 
@@ -271,6 +315,12 @@ def QCreate():
 				option_3 varchar(1000), 
 				option_4 varchar(1000), 
 				answer int(10))""")
+            mydb.connection.commit()
+            cursor.execute("CREATE TABLE IF NOT EXISTS " + code +
+                           """_result (student_id varchar(1000) PRIMARY KEY, 
+				exam_result varchar(1000), 
+				trust_score varchar(1000), 
+				result varchar(1000))""")
             mydb.connection.commit()
             createAutoProctorTable(code)
             cursor.execute('INSERT INTO quiz_details VALUES (%s, %s, % s, % s, % s, % s, % s, %s, %s, %s)',
@@ -331,10 +381,10 @@ def Quiz():
         elif answer == "option_4":
             answer = 4
         if image:
-            filename = secure_filename(question_code)
+            name = "%s.%s"%(question_code,"png")
+            filename = secure_filename(name)
             image.save(os.path.join(app.config['question_image'], filename))
-            image = "http://127.0.0.1:5000/static/question_image/%s.jpeg" % (
-                question_code)
+            image = "http://127.0.0.1:5000/static/question_image/%s" % (name)
         else:
             image = "NULL"
         if not qno or not question or not option_1 or not option_2 or not option_3 or not option_4 or not answer:
@@ -400,12 +450,12 @@ def Modify():
         elif answer == "option_4":
             answer = option_4
         if image:
-            filename = secure_filename(question_code)
+            name = "%s.%s"%(question_code,"png")
+            filename = secure_filename(name)
             if os.path.isfile(app.config['question_image'], filename):
                 os.remove(app.config['question_image'], filename)
             image.save(os.path.join(app.config['question_image'], filename))
-            image = "http://127.0.0.1:5000/static/question_image/%s.jpeg" % (
-                question_code)
+            image = "http://127.0.0.1:5000/static/question_image/%s" % (name)
         else:
             image = "NULL"
         if not qno or not question or not option_1 or not option_2 or not option_3 or not option_4 or not answer:
@@ -419,7 +469,7 @@ def Modify():
     return render_template('teacher/Modify.html', code=code)
 
 
-@app.route('/responseSubmitted', methods=['POST', 'GET'])
+@app.route('/student/responseSubmitted', methods=['POST', 'GET'])
 def response_submitted():
     if request.method == 'POST':
         selected_answers = {}
@@ -442,7 +492,7 @@ def response_submitted():
             myCursor.execute(sql_query, data)
             myCursor.connection.commit()
         myCursor.close()
-        return render_template("responseSubmitted.html")
+        return render_template("student/responseSubmitted.html")
 
 
 @app.route('/student/StartQuiz', methods=['GET', 'POST'])
@@ -464,7 +514,6 @@ def StartQuiz():
                 return render_template('student/StartQuiz.html', msg=msg)
             else:
                 session['code'] = code
-                # print(session['semester'])
                 if data['sem'] != session['semester']:
                     msg = "Not Correct Semester"
                     return render_template('student/StartQuiz.html', msg=msg)
@@ -512,11 +561,7 @@ def Test():
         time_zero = datetime.strptime('00:00:00', '%H:%M:%S')
         duration = (t1 - time_zero + t2).time()
         createFoldersForViolations(code)
-
-    cursor.execute("SELECT * FROM "+code)
-    data = cursor.fetchall()
-
-    return render_template('student/Test.html', date=date, duration=duration, data=data, start=start, n=n)
+    return render_template('student/Test.html', date=date, duration=duration, start=start, n=n)
 
 
 @app.route('/get_questions', methods=['GET', 'POST'])
@@ -532,6 +577,7 @@ def getQuestions():
         for i in questions:
             records[a] = {
                 "question": i[1],
+                "image" : i[2],
                 "option_1": str(i[3]),
                 "option_2": str(i[4]),
                 "option_3": str(i[5]),
@@ -560,4 +606,4 @@ def StartTest():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for("home"))
+    return redirect(url_for("login"))

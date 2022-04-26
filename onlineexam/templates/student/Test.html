@@ -18,25 +18,10 @@
 </head>
 
 <body>
-    <div class="top">
         <br>
-        <!-- <div class="Time">
+            <div id="Timer"></div>
 
-                <ul>
-                    <li style="float:left;padding: 15px;
-                            color: #FFFFFF;
-                            font-family: Raleway, sans-serif, Arial;
-                            font-size: 25px;
-                            font-weight: bold;
-                            text-decoration: none;
-                            margin-left: 5rem;">
-                                <div id="Timer"></div>
-                            </li>
-                </ul>
-            <br>
-        </div> -->
-
-        <form action="/responseSubmitted" method="post">
+        <form action="/student/responseSubmitted" method="post">
             <div class = "questions"></div>
             <input type="submit" id="endExamButton" value="Submit" name="submit">
         </form>
@@ -45,41 +30,44 @@
     </div>
 </body>
 <script>
-    // var date = "{{date}}";
-    // var end = "{{duration}}";
-    // var start = "{{start}}";
-    // var starttime = date + " " + start;
-    // var StartTimer = new Date(starttime).getTime();
-    // var endtime = date + " " + end;
-    // var countDown = new Date(endtime).getTime();
+      var date = "{{date}}";
+      var end = "{{duration}}";
+      var start = "{{start}}";
+      var starttime = date + " " + start;
+      var StartTimer = new Date(starttime).getTime();
+      var endtime = date + " " + end;
+      var countDown = new Date(endtime).getTime();
+        function submitform()
+        {
+            document.getElementById('Test').submit();
+            $.ajax({
+                        url: "/student/responseSubmitted",
+                        type: "POST",
+                    });
+        }
+      // Update the count down every 1 second
+      var x = setInterval(function() {
 
-    // // Update the count down every 1 second
-    // var x = setInterval(function() {
+         // Get today's date and time
+         var now = new Date().getTime();
+         var distance = countDown - now;
+         if (StartTimer > now) {
+             window.location.replace("http://127.0.0.1:5000/student/StartTest");
+         }
+        else if (distance < 0) {
+                 clearInterval(x);
+                 submitform();
+            } else {
+             // Time calculations for days, hours, minutes and seconds
+             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    //     // Get today's date and time
-    //     var now = new Date().getTime();
-    //     var distance = countDown - now;
-    //     if (StartTimer > now) {
-    //         window.location.replace("http://127.0.0.1:5000/student/StartTest");
-    //     } else {
-    //         // Time calculations for days, hours, minutes and seconds
-    //         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    //         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    //         // Output the result in an element with id="demo"
-    //         document.getElementById("Timer").innerHTML = hours + ":" +
-    //             minutes + ":" + seconds;
-
-    //         // If the count down is over, write some text
-    //         if (distance < 0) {
-    //             clearInterval(x);
-    //             document.getElementById("Timer").innerHTML = "EXPIRED";
-    //         }
-    //     }
-    // }, 1000);
-
-    
+             // Output the result in an element with id="demo"
+             document.getElementById("Timer").innerHTML = hours + ":" +
+                 minutes + ":" + seconds;
+            }
+     }, 10);
 
     </script>
 

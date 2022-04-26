@@ -11,7 +11,7 @@ from flask import request
 from onlineexam import socketio, threaded_backend, quiz, app
 
 img_count = 0  # This is count violation images inserted in database.
-cap = ""
+cap = cv2.VideoCapture(0)  # Reading webcam
 
 detector = dlib.get_frontal_face_detector()  # used to detect face.
 # loading shape predictor.
@@ -32,11 +32,16 @@ with open("onlineexam\yolov3\coco.names", "r") as f:
 net = cv2.dnn.readNet("onlineexam\yolov3\yolov3-spp.weights",
                       "onlineexam\yolov3\yolov3-spp.cfg")  # This is our ANN/model
 layers_names = net.getLayerNames()
-output_layers = [layers_names[i - 1] for i in net.getUnconnectedOutLayers()]
+output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-#imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
-#imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
-#refEncode = face_recognition.face_encodings(imgMridul)[0]
+imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
+imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
+refEncode = face_recognition.face_encodings(imgMridul)[0]
+
+# imgRdj = face_recognition.load_image_file("onlineexam\images\_rdj.jpg")
+# imgRdj = cv2.cvtColor(imgRdj, cv2.COLOR_BGR2RGB)
+# refEncode = face_recognition.face_encodings(imgRdj)[0]
+
 
 
 def insert_Image(backendInstance, message, frame, mydb, violationTime):
@@ -49,7 +54,7 @@ def insert_Image(backendInstance, message, frame, mydb, violationTime):
             message_path += i
 
     path = "static/" + quiz.quiz_code + "/" + quiz.student_email +"/"+ str(message_path)+"/" + str(img_count)+".png"
-    if quiz.student_email != "" and violationTime>2:
+    if quiz.student_email != "" and violationTime>0:
         cv2.imwrite("onlineexam/" + path, frame)
         #print(path)
         backendInstance.insert_message(message, path, mydb, violationTime)
@@ -209,7 +214,7 @@ def face_area(frame, x1, y1, x2, y2):
 
 def detect_person_mobile(backendInstance):
     global persons, mobiles, canBreak, correct_person, violation_done, no_other_violations, no_violation_mobile
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='1234', db='project')
+    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
 
     not_doing_person_violation = True
     not_doing_mobile_violation = True
@@ -218,7 +223,6 @@ def detect_person_mobile(backendInstance):
     start_time_person = 0
     start_time_mobile = 0
 
-    print("canBreak: " + str(canBreak) + " violation_done: " + str(violation_done) + " ")
     while True:  # and time.time()>(last_time + 3):
         if correct_person[0] == True:
             str_correct_person = True
@@ -319,14 +323,12 @@ def violation(backendInstance):
     violation_eye_direction_image = None
     violation_correct_person_image = None
 
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='1234', db='project')
+    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
     start_time = 0
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format
 
         if correct:
-            print("Reading camera")
-
             frame = cv2.flip(frame, 1)
 
             # convert to gray image
@@ -429,22 +431,8 @@ def violation(backendInstance):
                 break
 
 
-def initializeVariables():
-    global canBreak, cap, correct_person, persons, mobiles, eye_direction, face_direction, face_count
-
-    cap = cv2.VideoCapture(0)  # Reading webcam
-    correct_person = [False]
-    persons = 0
-    mobiles = 0
-    eye_direction = "center"
-    face_direction = "center"
-    face_count = 0
-    canBreak = False
-
 @socketio.on('violation')
 def start_violation():
-
-    initializeVariables()
     backendInstance = threaded_backend.BackendOperations()
     t1 = threading.Thread(target=detect_person_mobile, args=(backendInstance,))
     t2 = threading.Thread(target=violation, args=(backendInstance,))
@@ -457,7 +445,6 @@ def start_violation():
     t1.join()
     t2.join()
     t3.join()
-    print("Threads Closed")
 
 
 @app.route('/camera_close', methods=['GET', 'POST'])

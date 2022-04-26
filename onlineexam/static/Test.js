@@ -15,21 +15,21 @@
             var num = 1;
                 for(var key in data)
                 {
+                    
                     if (data[key]['image'] === "NULL"){
                         data[key]['image'] = " "
                     }
-                    $(".questions").append("<p>" + data[key]['question']
-                    + "</p> <br> <p>"+ data[key]['image']
-                    +"</p> <br><input type=\"radio\" name=\"question_" + num + "\" value=" + 1
-                    + "><label for=\"option1\">" +  data[key]['option_1'] + "</label>"
-                    + "<br> <input type=\"radio\"  name=\"question_" + num + "\" value=" + 2
-                    + "><label for=\"option2\">" +  data[key]['option_2'] + "</label>"
-                    + "<br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 3
-                    + "><label for=\"option3\">" +  data[key]['option_3'] + "</label>"
-                    + "<br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 4
-                    + "><label for=\"option4\">" +  data[key]['option_4'] + "</label> <br><br>" );
-
-                    ++num;
+                    $(".questions").append("<br><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Q. " + data[key]['question']
+                    + "</p> <br><br>&nbsp&nbsp&nbsp&nbsp<p>"+ data[key]['image']
+                    +"</p><br><br>&nbsp&nbsp&nbsp&nbsp<input type=\"radio\" name=\"question_" + num + "\" value=" + 1
+                    + "><label for=\"option1\">" +  data[key]['option_1'] + "</label><br><br>"
+                    + "<br> &nbsp&nbsp&nbsp&nbsp   <input type=\"radio\"  name=\"question_" + num + "\" value=" + 2
+                    + "><label for=\"option2\">" +  data[key]['option_2'] + "</label><br><br>"
+                    + "<br> &nbsp&nbsp&nbsp&nbsp <input type=\"radio\" name=\"question_" + num + "\" value=" + 3
+                    + "><label for=\"option3\">" +  data[key]['option_3'] + "</label><br><br>"
+                    + "<br> &nbsp&nbsp&nbsp&nbsp <input type=\"radio\" name=\"question_" + num + "\" value=" + 4
+                    + "><label for=\"option4\">" +  data[key]['option_4'] + "</label> "
+                    +"<br><br><hr style=width:98%;text-align:center;margin-left:1%></hr>" );
                 }
             }
 

@@ -232,10 +232,10 @@ def quizreport_student():
     n = cursor.rowcount
     cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
     row = cursor.fetchall()
-    return render_template("student/quiz_report.html", data=row, n=n)
+    return render_template("student/quiz_report.html", data=row, n=n, details=details, x=x)
 
 @app.route('/student/exam_report')
-def examreport_student():
+def report_student():
     return render_template("student/exam_report.html")
 
 @app.route('/get_quiz_details', methods=['GET', 'POST'])

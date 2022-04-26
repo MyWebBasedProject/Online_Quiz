@@ -15,8 +15,6 @@
       <tr>
           <th>Student ID</th>
           <th>Name</th>
-          <th>Marks</th>
-          <th>Trust Score</th>
           <th>Exam Report</th>
           <th>Proctor Report</th>
           <th>Result</th>
@@ -26,8 +24,6 @@
     <tbody>
         <td>{{data[i]['id']}}</td>
         <td>{{data[i]['first_name']}} {{data[i]['middle_name']}} {{data[i]['last_name']}}</th>
-        <td>Marks</td>
-        <td>Trust Score</td>
         <td> <form action="/teacher/exam_report" method="POST">
         <input id="exam_report" type="hidden" name="exam_report" value="{{data[i]['id']}}">
             <input type="submit" value="{{data[i]['id']}}" name="Exam Report"></form></td>

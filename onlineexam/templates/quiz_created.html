@@ -1,13 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Quiz Created</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='quizreport.css') }}">
+    <title>Quiz Created</title>
 {% endblock %}
 
 {% block body %}
@@ -20,22 +14,33 @@
               <th>Semester</th>
               <th>Subject</th>
               <th>Date</th>
-              <th>Report</th>
+              <th></th>
           </tr>
         </thead>
-        {% for i in range (0,n): %} {% if data: %}
         <tbody>
-            <td>{{data[i]['code']}}</td>
-            <td>{{data[i]['title']}}</td>
-            <td>{{data[i]['branch']}}</td>
-            <td>{{data[i]['sem']}}</td>
-            <td>{{data[i]['subject']}}</td>
-            <td>{{data[i]['date']}}</th>
-            <td> <form action="/quiz_report" method="POST"><input id="report" type="hidden" name="report" value="{{data[i]['code']}}">
-                <input id="branch" type="hidden" name="branch" value="{{data[i]['branch']}}">
-                <input id="sem" type="hidden" name="sem" value="{{data[i]['sem']}}">
-                <input type="submit" value="View" name="View Report"></form></td>
+
         </tbody>
-        {% endif %} {% endfor %}
     </table>
+    <script>
+        printRecords();
+        function printRecords()
+            {
+            console.log("Print Records");
+                $(".record-table tbody").children().remove();
+                $.ajax({
+                    url: "/get_quiz_details",
+                    type:"POST",
+                    success: function(data)
+                    {
+                        var j = 1;
+                        for(var key in data)
+                        {
+                            $(".record-table tbody").append("<tr><td>" + data[key]['quiz_code'] + "</td><td>" + data[key]['title'] + "</td><td> " + data[key]['branch'] + "</td><td>" + data[key]['sem'] + "</td><td>" + data[key]['subject'] + "</td><td>" + data[key]['date'] + "<button id=" + j + "> View Report </button>" + "</td></tr>" );
+                            ++j;
+                        }
+
+                    }
+                });
+            }
+    </script>
 {% endblock %}

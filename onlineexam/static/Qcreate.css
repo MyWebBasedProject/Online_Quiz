@@ -62,6 +62,20 @@ p {
     font-weight: bold;
 }
 
+input[type=text] {
+    background: #ffffff;
+    display: block;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 1000;
+    border: 1px solid #535c5c;
+    padding: 9px;
+    width: 35rem;
+    outline: none;
+    color: rgb(41, 38, 38);
+    border-radius: 4px;
+}
 
 input[type=time] {
     background: #ffffff;
@@ -72,13 +86,16 @@ input[type=time] {
     font-weight: 1000;
     border: 1px solid #535c5c;
     padding: 9px;
-    width: 23rem;
+    width: 35rem;
     outline: none;
     color: rgb(41, 38, 38);
     border-radius: 4px;
 }
 
-
+input[type="text"]:focus {
+    border-color: #0e7cd6;
+    text-align: left;
+}
 
 input[type="time"]:focus {
     border-color: #0e7cd6;
@@ -156,16 +173,16 @@ p {
     font-weight: 1000;
     border: 1px solid #535c5c;
     padding: 9px;
-    width: 35rem;
+    width: 28rem;
     outline: none;
     color: rgb(41, 38, 38);
     border-radius: 4px;
 }
 
-#sem:focus {
+#sem :focus {
     border-color: #0e7cd6;
-    text-align: left;
 }
+
 #time {
     background: #ffffff;
     display: block;
@@ -202,85 +219,4 @@ input[type="button"]:hover {
     background-color: rgb(199, 196, 10);
     border-color: rgb(199, 196, 10);
     ;
-}
-
-
-#duration{
-    background: #ffffff;
-    display: block;
-    text-align: left;
-    font-family: 'Raleway', sans-serif;
-    font-size: 18px;
-    font-weight: 1000;
-    border: 1px solid #535c5c;
-    padding: 9px;
-    width: 23rem;
-    outline: none;
-    color: rgb(41, 38, 38);
-    border-radius: 4px;
-}
-#duration:focus {
-    border-color: #0e7cd6;
-    text-align: left;
-}
-
-
-
-#title {
-    background: #ffffff;
-    display: block;
-    text-align: left;
-    font-family: 'Raleway', sans-serif;
-    font-size: 18px;
-    font-weight: 1000;
-    border: 1px solid #535c5c;
-    padding: 9px;
-    width: 35rem;
-    outline: none;
-    color: rgb(41, 38, 38);
-    border-radius: 4px;
-}
-#title:focus {
-    border-color: #0e7cd6;
-    text-align: left;
-}
-
-
-#subject {
-    background: #ffffff;
-    display: block;
-    text-align: left;
-    font-family: 'Raleway', sans-serif;
-    font-size: 18px;
-    font-weight: 1000;
-    border: 1px solid #535c5c;
-    padding: 9px;
-    width: 35rem;
-    outline: none;
-    color: rgb(41, 38, 38);
-    border-radius: 4px;
-}
-#subject:focus {
-    border-color: #0e7cd6;
-    text-align: left;
-}
-
-
-#questions {
-    background: #ffffff;
-    display: block;
-    text-align: left;
-    font-family: 'Raleway', sans-serif;
-    font-size: 18px;
-    font-weight: 1000;
-    border: 1px solid #535c5c;
-    padding: 9px;
-    width: 23rem;
-    outline: none;
-    color: rgb(41, 38, 38);
-    border-radius: 4px;
-}
-#questions:focus {
-    border-color: #0e7cd6;
-    text-align: left;
 }

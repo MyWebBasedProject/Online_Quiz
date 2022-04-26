@@ -1,8 +1,6 @@
     var count = 0;
     var socket;
-    var seconds = 0;
-    var screenChanged = 0;
-
+    
     showQuestions();
 
     //console.log("Show Questions");
@@ -17,16 +15,15 @@
             var num = 1;
                 for(var key in data)
                 {
-                    $(".questions").append("<br><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Q. " + data[key]['question']
-                    + "</p> <br><br>&nbsp&nbsp&nbsp&nbsp  <input type=\"radio\" name=\"question_" + num + "\" value=" + 1
-                    + "><label for=\"option1\">" +  data[key]['option_1'] + "</label><br><br>"
-                    + "<br> &nbsp&nbsp&nbsp&nbsp   <input type=\"radio\"  name=\"question_" + num + "\" value=" + 2
-                    + "><label for=\"option2\">" +  data[key]['option_2'] + "</label><br><br>"
-                    + "<br> &nbsp&nbsp&nbsp&nbsp <input type=\"radio\" name=\"question_" + num + "\" value=" + 3
-                    + "><label for=\"option3\">" +  data[key]['option_3'] + "</label><br><br>"
-                    + "<br> &nbsp&nbsp&nbsp&nbsp <input type=\"radio\" name=\"question_" + num + "\" value=" + 4
-                    + "><label for=\"option4\">" +  data[key]['option_4'] + "</label> "
-                    +"<br><br><hr style=width:98%;text-align:center;margin-left:1%></hr>" );
+                    $(".questions").append("<p>" + data[key]['question']
+                    + "</p> <br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 1
+                    + "><label for=\"option1\">" +  data[key]['option_1'] + "</label>"
+                    + "<br> <input type=\"radio\"  name=\"question_" + num + "\" value=" + 2
+                    + "><label for=\"option2\">" +  data[key]['option_2'] + "</label>"
+                    + "<br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 3
+                    + "><label for=\"option3\">" +  data[key]['option_3'] + "</label>"
+                    + "<br> <input type=\"radio\" name=\"question_" + num + "\" value=" + 4
+                    + "><label for=\"option4\">" +  data[key]['option_4'] + "</label> <br><br>" );
 
                     ++num;
                 }
@@ -36,10 +33,10 @@
         });
     }
 
-    
         var clickedSubmit = false;
         function closeCamera()
             {
+
                     $.ajax({
                         url: "/camera_close",
                         type: "POST",
@@ -53,12 +50,9 @@
             closeCamera();
         }
     $(document).ready(function(){
-    
-
 
         function takeScreenShot()
         {
-
             $.ajax({
                 url: "/take_screenShot",
                 type: "POST",
@@ -79,36 +73,13 @@
         document.addEventListener('visibilitychange', function(e) {
             if(document.visibilityState === "hidden")
             {
+                console.log(document.hasFocus());
                 takeScreenShot();
-                ++screenChanged;
-                if(screenChanged>1)
-                {
-
-                    closeCamera();
-                    setTimeout(function(){window.close()}, 3000);
-
-                }
-                setInterval(incrementSeconds, 1000);
                 count = count + 1;
-            }
-            else
-            {
-                clearInterval(incrementSeconds, 1000);
-                if(seconds >= 3)
-                {
-                    closeCamera();
-                    setTimeout(function(){window.close()}, 3000);
+                //document.getElementById("canSee").innerHTML = "Number of times application switched: " + count;
 
-                }
-                seconds = 0;
             }
         });
-
-    function incrementSeconds() {
-        seconds += 1;
-    }
-
-
 
         socket.on('detect_person_mobile',function(person, mobile, correct_person){
 //           document.getElementById("mobile").innerHTML = "Number of Mobiles: " + mobile;

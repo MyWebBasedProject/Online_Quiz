@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <title>Your Report</title>
+    <title>{{data[i]['id']}} Report</title>
 {% endblock %}
 
 
 {% block body %}
-    <h1>View Report</h1>
+    <h1>Proctor Report</h1>
+    <br>
+    <p id="percent"></p>
         <select name="violations" id="violations">
             <option value="All">All</option>
             <option value="Face Left Side">Face Left Side</option>
@@ -23,7 +25,6 @@
         <thead>
           <tr>
             <th>Message</th>
-            <th>Time</th>
               <th>Image</th>
               <th>Duration</th>
           </tr>
@@ -50,8 +51,6 @@
 
             function showViolations()
             {
-                //console.log(option);
-                //console.log("Called Show Violations");
                 $(".record-table tbody").children().remove();
                 $.ajax({
                     url: "/show_records_and_images",
@@ -64,7 +63,7 @@
                         {
                             //console.log(data[key]["image"]);
 
-                            $(".record-table tbody").append("<tr><td>" + data[key]['message'] + "</td><td>" + data[key]['time'] + "</td><td> " + "<img src=" + data[key]['image'] + " width= 25% height= 25%;>" + "</td><td>" + data[key]['duration'] + "</td></tr>" );
+                            $(".record-table tbody").append("<tr><td>" + data[key]['message'] +  "</td><td> " + "<img src=" + data[key]['image'] + " width= 25% height= 25%;>" + "</td><td>" + data[key]['duration'] + "</td></tr>" );
                         }
                         
                     }

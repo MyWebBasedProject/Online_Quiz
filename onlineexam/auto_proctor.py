@@ -32,11 +32,11 @@ with open("onlineexam\yolov3\coco.names", "r") as f:
 net = cv2.dnn.readNet("onlineexam\yolov3\yolov3-spp.weights",
                       "onlineexam\yolov3\yolov3-spp.cfg")  # This is our ANN/model
 layers_names = net.getLayerNames()
-output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+output_layers = [layers_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
-imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
-imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
-refEncode = face_recognition.face_encodings(imgMridul)[0]
+# imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
+# imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
+# refEncode = face_recognition.face_encodings(imgMridul)[0]
 
 # imgRdj = face_recognition.load_image_file("onlineexam\images\_rdj.jpg")
 # imgRdj = cv2.cvtColor(imgRdj, cv2.COLOR_BGR2RGB)

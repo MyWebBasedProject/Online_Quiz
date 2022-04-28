@@ -75,7 +75,6 @@ def calculate_score():
         time_in_seconds = viewReport.getViolationCount()
 
         violated_time = 0
-        print(time_in_seconds)
         for i in time_in_seconds:
             violated_time += i[0]
 

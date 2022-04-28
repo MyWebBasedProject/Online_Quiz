@@ -24,9 +24,7 @@
         <td>{{data[i]['id']}}</td>
         <td>{{data[i]['first_name']}} {{data[i]['middle_name']}} {{data[i]['last_name']}}</th>
         <td> <form action="/student/exam_report" method="POST">
-        <input id="exam_report" type="hidden" name="exam_report" value="{{data[i]['id']}}">
-            <input type="submit" value="{{data[i]['id']}}" name="Exam Report"></form></td>
-        <td> <form action="/teacher/proctor_report" method="POST">
+            <input id="exam_report" type="hidden" name="exam_report" value="{{data[i]['id']}}"></form>
         <td>Result</td>
     </tbody>
     {% endif %} {% endfor %}

@@ -126,4 +126,8 @@ function incrementSeconds() {
         //document.getElementById("violation").innerHTML = "Number  Of Violations Performed: " + no_violation;
     });
 
+    socket.on('face_distance', function(face_perimeter){
+
+    });
+
 });

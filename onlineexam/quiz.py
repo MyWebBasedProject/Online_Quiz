@@ -232,7 +232,7 @@ def quizreport_student():
     n = cursor.rowcount
     cursor.execute("SELECT * FROM quiz_details where teacher_id = %s", (id,))
     row = cursor.fetchall()
-    return render_template("student/quiz_report.html", data=row, n=n, details=details, x=x)
+    return render_template("student/quiz_report.html", data=row, n=n)
 
 @app.route('/student/exam_report')
 def report_student():
@@ -340,15 +340,6 @@ def createAutoProctorTable(quiz_code):
     myCursor.execute(sql_query)
     mydb.connection.commit()
     myCursor.close()
-
-#
-# def createResponsesTable(quiz_code):
-#     sql_query = "CREATE TABLE IF NOT EXISTS " + \
-#         str(quiz_code) + "_response (response_id int AUTO_INCREMENT PRIMARY KEY , student_roll_no int, question_id varchar(11), answer int, correct BOOLEAN )"
-#     myCursor = mydb.connection.cursor()
-#     myCursor.execute(sql_query)
-#     mydb.connection.commit()
-#     myCursor.close()
 
 
 @app.route('/teacher/Quiz', methods=['GET', 'POST'])

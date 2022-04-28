@@ -32,11 +32,11 @@ with open("onlineexam\yolov3\coco.names", "r") as f:
 net = cv2.dnn.readNet("onlineexam\yolov3\yolov3-spp.weights",
                       "onlineexam\yolov3\yolov3-spp.cfg")  # This is our ANN/model
 layers_names = net.getLayerNames()
-output_layers = [layers_names[i - 1] for i in net.getUnconnectedOutLayers()]
+output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-# imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
-# imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
-# refEncode = face_recognition.face_encodings(imgMridul)[0]
+imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
+imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
+refEncode = face_recognition.face_encodings(imgMridul)[0]
 
 # imgRdj = face_recognition.load_image_file("onlineexam\images\_rdj.jpg")
 # imgRdj = cv2.cvtColor(imgRdj, cv2.COLOR_BGR2RGB)
@@ -325,6 +325,7 @@ def violation(backendInstance):
 
     mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
     start_time = 0
+    face_perimenter = 401
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format
 
@@ -426,6 +427,7 @@ def violation(backendInstance):
                                   eye_direction, face_direction))
             
             socketio.emit('number_of_violation', (violation_done))
+            socketio.emit('face_distance', (face_perimenter))
             global canBreak
             if cv2.waitKey(1) & canBreak == True:
                 break

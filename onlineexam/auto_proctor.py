@@ -6,14 +6,50 @@ import numpy as np
 import math
 import time
 import MySQLdb
-from flask import request
-
+from flask import request, session
 from onlineexam import socketio, threaded_backend, quiz, app
 
+# region start thread and initialize variable
+
+
+def initializeVariables():
+    global canBreak, cap, correct_person, persons, mobiles, eye_direction, face_direction, face_count
+
+    cap = cv2.VideoCapture(0)  # Reading webcam
+    correct_person = [False]
+    persons = 0
+    mobiles = 0
+    eye_direction = "center"
+    face_direction = "center"
+    face_count = 0
+    canBreak = False
+
+
+@socketio.on('violation')
+def start_violation():
+    initializeVariables()
+    initializeImageRecognition()
+    backendInstance = threaded_backend.BackendOperations()
+    t1 = threading.Thread(target=detect_person_mobile, args=(backendInstance,))
+    t2 = threading.Thread(target=violation, args=(backendInstance,))
+    t3 = threading.Thread(target=check_correct_person, args=())
+
+    t1.start()
+    t2.start()
+    t3.start()
+
+    t1.join()
+    t2.join()
+    t3.join()
+
+# endregion
+
+
 img_count = 0  # This is count violation images inserted in database.
-cap = cv2.VideoCapture(0)  # Reading webcam
+cap = ""
 
 detector = dlib.get_frontal_face_detector()  # used to detect face.
+
 # loading shape predictor.
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
@@ -25,23 +61,32 @@ eye_direction = "center"
 face_direction = "center"
 face_count = 0
 canBreak = False
+classes_names = []
+net = ""
+refEncode = ""
+output_layers = ""
+
+# region initialization of image recognition
 
 
-with open("onlineexam\yolov3\coco.names", "r") as f:
-    classes_names = [line.strip() for line in f.readlines()]
-net = cv2.dnn.readNet("onlineexam\yolov3\yolov3-spp.weights",
-                      "onlineexam\yolov3\yolov3-spp.cfg")  # This is our ANN/model
-layers_names = net.getLayerNames()
-output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+def initializeImageRecognition():
+    global net, classes_names, refEncode, output_layers
+    with open("onlineexam\yolov3\coco.names", "r") as f:
+        classes_names = [line.strip() for line in f.readlines()]
+    net = cv2.dnn.readNet("onlineexam\yolov3\yolov3-spp.weights",
+                          "onlineexam\yolov3\yolov3-spp.cfg")  # This is our ANN/model
+    layers_names = net.getLayerNames()
+    output_layers = [layers_names[i[0] - 1]
+                     for i in net.getUnconnectedOutLayers()]
 
-imgMridul = face_recognition.load_image_file("onlineexam\images\Mridul.jpg")
-imgMridul = cv2.cvtColor(imgMridul, cv2.COLOR_BGR2RGB)
-refEncode = face_recognition.face_encodings(imgMridul)[0]
+    path = "onlineexam" + str(quiz.profile_pic)
+    print(path)
+    referenceImage = face_recognition.load_image_file(
+        path)
+    referenceImage = cv2.cvtColor(referenceImage, cv2.COLOR_BGR2RGB)
+    refEncode = face_recognition.face_encodings(referenceImage)[0]
 
-# imgRdj = face_recognition.load_image_file("onlineexam\images\_rdj.jpg")
-# imgRdj = cv2.cvtColor(imgRdj, cv2.COLOR_BGR2RGB)
-# refEncode = face_recognition.face_encodings(imgRdj)[0]
-
+# endregion
 
 
 def insert_Image(backendInstance, message, frame, mydb, violationTime):
@@ -53,10 +98,13 @@ def insert_Image(backendInstance, message, frame, mydb, violationTime):
         else:
             message_path += i
 
-    path = "static/" + quiz.quiz_code + "/" + quiz.student_email +"/"+ str(message_path)+"/" + str(img_count)+".png"
-    if quiz.student_email != "" and violationTime>0:
+    path = "static/Exam Proctor/register_id_" + str(quiz.teacher_id) + "/class_id_" + str(quiz.class_id) + "/quiz_id_" + str(
+        quiz.quiz_id) + "/student_" + str(quiz.student_id) + "/" + str(message_path)+"/" + str(img_count)+".png"
+    print(path)
+
+    if violationTime > 2:
         cv2.imwrite("onlineexam/" + path, frame)
-        #print(path)
+        # print(path)
         backendInstance.insert_message(message, path, mydb, violationTime)
         img_count += 1
 
@@ -167,7 +215,7 @@ def face_orientation(frame, landmarks):
                     cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 1)
         if angle_d < 160:
             face_direction = 'Face Left Side'
-            cv2.putText(frame,'Face Left Side', (100, 150),
+            cv2.putText(frame, 'Face Left Side', (100, 150),
                         cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 0, 255), 1)
             return False
         elif angle_d > 200:
@@ -214,7 +262,8 @@ def face_area(frame, x1, y1, x2, y2):
 
 def detect_person_mobile(backendInstance):
     global persons, mobiles, canBreak, correct_person, violation_done, no_other_violations, no_violation_mobile
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
+    mydb = MySQLdb.connect(host='localhost', user='root',
+                           passwd='1234', db='project')
 
     not_doing_person_violation = True
     not_doing_mobile_violation = True
@@ -228,6 +277,7 @@ def detect_person_mobile(backendInstance):
             str_correct_person = True
         else:
             str_correct_person = False
+        
         correct, frame = cap.read()  # normal image capture in RGB format
         if correct:
             frame = cv2.flip(frame, 1)
@@ -288,8 +338,8 @@ def detect_person_mobile(backendInstance):
             elif persons == 1 and not_doing_person_violation == False:
                 total_time_person = time.time() - start_time_person
                 not_doing_person_violation = True
-                insert_Image(backendInstance, 'Multiple Person Detected', violation_person_image , mydb, total_time_person)
-
+                insert_Image(backendInstance, 'Multiple Person Detected',
+                             violation_person_image, mydb, total_time_person)
 
             if mobiles != 0 and not_doing_mobile_violation == True:
                 violation_done += 1
@@ -299,8 +349,9 @@ def detect_person_mobile(backendInstance):
             elif mobiles == 0 and not_doing_mobile_violation == False:
                 total_time_mobile = time.time() - start_time_mobile
                 not_doing_mobile_violation = True
-                print("mobile violation: " + str(total_time_mobile) )
-                insert_Image(backendInstance, 'Mobile Detected', violation_mobile_image, mydb, total_time_mobile)
+                print("mobile violation: " + str(total_time_mobile))
+                insert_Image(backendInstance, 'Mobile Detected',
+                             violation_mobile_image, mydb, total_time_mobile)
 
             cv2.imshow("person mobile", frame)
             socketio.emit('detect_person_mobile',
@@ -323,9 +374,10 @@ def violation(backendInstance):
     violation_eye_direction_image = None
     violation_correct_person_image = None
 
-    mydb = MySQLdb.connect(host='localhost', user='root', passwd='', db='project')
+    mydb = MySQLdb.connect(host='localhost', user='root',
+                           passwd='1234', db='project')
     start_time = 0
-    face_perimenter = 401
+    face_perimeter = 401
     while True:
         correct, frame = cap.read()  # normal image capture in RGB format
 
@@ -345,120 +397,103 @@ def violation(backendInstance):
                 start_time = time.time()
                 violation_no_face_image = frame
 
-            elif face_count==1 and persons==1 and not_doing_face_violation == False:
-                not_doing_face_violation  = True
+            elif face_count == 1 and persons == 1 and not_doing_face_violation == False:
+                not_doing_face_violation = True
                 total_time = time.time() - start_time
-                insert_Image(backendInstance, 'No Face Detected', violation_no_face_image, mydb, total_time)
+                insert_Image(backendInstance, 'No Face Detected',
+                             violation_no_face_image, mydb, total_time)
 
-            elif face_count==1 and persons == 1 and not_doing_face_violation == True:
+            elif face_count == 1 and persons == 1 and not_doing_face_violation == True:
                 face = faces[0]
                 x1, y1 = face.left(), face.top()
                 x2, y2 = face.right(), face.bottom()
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                face_perimenter = face_area(frame, x1, y1, x2, y2)
+                face_perimeter = face_area(frame, x1, y1, x2, y2)
                 landmarks = predictor(gray, face)
 
-                if correct_person[0]==False and not_doing_wrong_person_violation==True:
+                if correct_person[0] == False and not_doing_wrong_person_violation == True:
                     violation_done += 1
                     start_time = time.time()
                     not_doing_wrong_person_violation = False
                     violation_correct_person_image = frame
                     # print("wrong person detected")
 
-
-                elif correct_person[0]==True and not_doing_wrong_person_violation==False:
+                elif correct_person[0] == True and not_doing_wrong_person_violation == False:
                     not_doing_wrong_person_violation = True
                     total_time = time.time() - start_time
-                    insert_Image(backendInstance, 'Wrong Person', violation_correct_person_image, mydb, total_time)
+                    insert_Image(backendInstance, 'Wrong Person',
+                                 violation_correct_person_image, mydb, total_time)
                     # print('Wrong person gone')
 
-                elif correct_person[0]==True and not_doing_wrong_person_violation == True:
+                elif correct_person[0] == True and not_doing_wrong_person_violation == True:
 
-                    if face_perimenter > 400 and face_perimenter < 525:
-                        face_orientation_check = face_orientation(frame, landmarks)
+                    if face_perimeter > 400 and face_perimeter < 525:
+                        face_orientation_check = face_orientation(
+                            frame, landmarks)
 
-                        if face_orientation_check==False and not_doing_face_direction_violation == True:
-                            not_doing_face_direction_violation= False
+                        if face_orientation_check == False and not_doing_face_direction_violation == True:
+                            not_doing_face_direction_violation = False
                             start_time = time.time()
                             violation_done += 1
                             violation_face_direction_image = frame
                             violation_msg = face_direction
 
-                        elif face_orientation_check==True and not_doing_face_direction_violation==False:
+                        elif face_orientation_check == True and not_doing_face_direction_violation == False:
                             not_doing_face_direction_violation = True
                             total_time = time.time() - start_time
-                            insert_Image(backendInstance, violation_msg, violation_face_direction_image, mydb, total_time)
+                            insert_Image(
+                                backendInstance, violation_msg, violation_face_direction_image, mydb, total_time)
 
-
-                        elif face_orientation_check==True and not_doing_face_direction_violation == True:
-                            gaze_detection_check = gaze_calcualtion( frame, gray, landmarks)
+                        elif face_orientation_check == True and not_doing_face_direction_violation == True:
+                            gaze_detection_check = gaze_calcualtion(
+                                frame, gray, landmarks)
 
                             if gaze_detection_check == False and not_doing_eye_direction_violation == True:
                                 not_doing_eye_direction_violation = False
                                 violation_eye_direction_image = frame
-                                violation_done+=1
+                                violation_done += 1
                                 violation_msg = eye_direction
                                 start_time = time.time()
 
                             elif gaze_detection_check == True and not_doing_eye_direction_violation == False:
                                 total_time = time.time() - start_time
                                 not_doing_eye_direction_violation = True
-                                insert_Image(backendInstance, violation_msg, violation_eye_direction_image, mydb, total_time)
+                                insert_Image(
+                                    backendInstance, violation_msg, violation_eye_direction_image, mydb, total_time)
 
                             elif gaze_detection_check == True and not_doing_eye_direction_violation == True:
                                 pass
 
-                    elif face_perimenter < 400:
+                    elif face_perimeter < 400:
                         cv2.putText(frame, str("Face too far"), (100, 200),
                                     cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 0), 1)
-                    elif face_perimenter > 525:
+                    elif face_perimeter > 525:
                         cv2.putText(frame, str("Face too close"), (100, 200),
                                     cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 0), 1)
 
-            
             cv2.putText(frame, "Is correct Person" + str(correct_person), (100, 50),
-                                cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255),1)
+                        cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255), 1)
 
-            cv2.putText(frame, "Eye direction: " + str(eye_direction), (100, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255,0,255), 1)
-            
+            cv2.putText(frame, "Eye direction: " + str(eye_direction),
+                        (100, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 255), 1)
+
             cv2.imshow("violations", frame)
-            
+
             socketio.emit('violation', (face_count,
-                                  eye_direction, face_direction))
-            
+                          eye_direction, face_direction))
             socketio.emit('number_of_violation', (violation_done))
-            socketio.emit('face_distance', (face_perimenter))
+            socketio.emit('face_distance', (face_perimeter))
             global canBreak
             if cv2.waitKey(1) & canBreak == True:
                 break
 
 
-@socketio.on('violation')
-def start_violation():
-    backendInstance = threaded_backend.BackendOperations()
-    t1 = threading.Thread(target=detect_person_mobile, args=(backendInstance,))
-    t2 = threading.Thread(target=violation, args=(backendInstance,))
-    t3 = threading.Thread(target=check_correct_person, args=())
-
-    t1.start()
-    t2.start()
-    t3.start()
-
-    t1.join()
-    t2.join()
-    t3.join()
-
-
 @app.route('/camera_close', methods=['GET', 'POST'])
 def close_camera():
-    #pdb.set_trace()
+    # pdb.set_trace()
     if request.method == "POST":
-        print("Close")
         global canBreak
         canBreak = True
-        print("Close Camera")
         cap.release()
         cv2.destroyAllWindows()
-        print("Closed EveryThing")
         return ""
-

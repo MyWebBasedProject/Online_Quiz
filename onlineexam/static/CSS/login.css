@@ -1,0 +1,147 @@
+body {
+    background:url(bg.jpg);
+    height: 100%;
+    width: 100%;
+}
+
+
+/* #region Login Form */
+.LoginForm {
+    width: 40%;
+    /* margin: 0 auto; */
+    position: absolute;
+    padding: 40px;
+    display: flex;
+    opacity: 1;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 2px 0px 30px #585454d3;
+    background: linear-gradient( 90deg,#ffffff 50%,#961eff 50%);
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+}
+/* #endregion */
+
+/* #region image part */
+.LoginForm img{
+    width: 50%;
+    /* border: 2px solid; */
+    /* box-sizing: border-box; */
+}
+/* #endregion */
+
+
+/* #region Login Form */
+.LoginForm form{
+    width: 50%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* box-sizing: border-box; */
+    padding-left: 40px;
+}
+
+.err_msg {
+    letter-spacing: 1px;
+    color: #ffe602;
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 4px 14px;
+    height: 15px;
+    text-align: center;
+}
+
+::placeholder {
+    color: rgb(181, 181, 181);
+}
+
+
+input[type=email], input[type=password]{
+    background: #f7f7f7;
+    display: block;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 1000;
+    border: 1px solid #535c5c;
+    padding: 10px 20px;
+    width: 80%;
+    color: #171835;
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-bottom: 4px;
+}
+
+input[type=password]{
+    margin-top: 4px;
+}
+
+.LoginForm form .radio-button li{
+    list-style-type: none;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 49%;
+    text-align: center;
+}
+
+
+input[type="password"]:focus {
+    border-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 20px #edf81f;
+    text-align: left;
+}
+input[type="email"]:focus {
+    border-color: white;
+    box-shadow: 0px 0px 20px #edf81f;
+    text-align: left;
+}
+
+.LoginForm form .buttons{
+    display: flex;
+    justify-content: space-between;
+    margin: 14px;
+    margin-bottom: 0px;
+}
+
+.LoginForm form .buttons input{
+    padding: 5px 16px;
+    border: 5px solid #FFF;
+    font-family: 'Heebo';
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0);
+    color: #FFF;
+    text-transform: uppercase;
+}
+
+
+.LoginForm form input[type="submit"]:hover, .LoginForm form input[type="button"]:hover{
+    background-color: #fff;
+    border: 5px solid #29004d;
+    color: #961eff;
+    font-weight: bold;
+}
+
+input[type=radio] {
+    border: 0px;
+    accent-color: rgb(238, 255, 0);
+  }
+
+  input[type=radio]::after{
+      border-color:rgb(238, 255, 0);    
+  }
+
+.LoginForm form label{
+    font-family: 'Heebo';
+    color: #FFF;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 18px;
+}
+
+/* #endregion */
+
+
+

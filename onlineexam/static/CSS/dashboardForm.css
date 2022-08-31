@@ -1,0 +1,61 @@
+.dashboard-body{
+    position: relative;
+}
+
+.dashboard-body .form-container{
+    width: 90%;
+    padding: 4%;
+    border-radius: 20px;
+    border: 2px solid white;
+    box-shadow: 5px 5px 25px grey;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'ubuntu';
+    font-size: larger;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.dashboard-body .form-container form{
+    font-family: "ubuntu";
+}
+
+.dashboard-body .form-container .form-input{
+    display: block;
+    margin: 4% 0;
+}
+
+.dashboard-body .form-container .form-input:first-child{
+    margin-top: 0;
+}
+
+.dashboard-body .form-container .form-input:last-child{
+    margin-bottom: 0;
+}
+
+
+.dashboard-body .form-container .form-input label{
+    display: inline-block;
+    width: 35%;
+}
+
+.dashboard-body .form-container .form-input input{
+    display: inline-block;
+    width: 50%;
+    height: 5vh;
+}
+
+.dashboard-body .form-container .blue-button{
+    display: block;
+    text-transform: uppercase;
+    margin: 0 auto;
+    background-color: blue;
+    color: white;
+    font-family: inherit;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 12px;
+}
+

@@ -1,0 +1,30 @@
+table{
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+th, td{
+    text-align: center;
+}
+
+table td button{
+    color: white;
+    border: none;
+    padding: 5%;
+    border-radius: 20px;
+}
+
+a{
+    cursor:pointer;
+    color: white;
+    text-decoration: none;
+}
+
+.correct-option{
+
+}
+
+.incorrect-option{
+
+}

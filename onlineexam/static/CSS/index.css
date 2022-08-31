@@ -1,0 +1,123 @@
+
+header .container nav{
+	width: 100%;
+}
+
+
+/* #region  Section Information*/
+
+.long-container{
+	margin-bottom: 40px;
+	width:100%;
+	background-color: rgb(195, 241, 241);
+	height: 400px;
+	box-sizing: border-box;
+	position: relative;
+}
+
+section.heading-container{
+text-align: center;
+}
+
+section.heading-container h1{
+	font-size: 50px;
+	padding-top: 20px;
+	margin: 0;
+}
+
+section.heading-container h3{
+	font-weight: 500;
+	font-size: 30px;
+	margin-top: 10px;
+}
+
+section.rules{
+	background-color: #fff;
+	display: flex;
+	justify-content: center;
+	/* border: 2px solid rebeccapurple; */
+}
+
+section.rules .rules-set{
+	width: 50%;
+	/* border: 2px solid black; */
+	display: flex;
+	flex-direction: column;
+}
+
+section.rules .rules-set h2{
+	text-align: center;
+	margin: 0;
+	padding: 15px 0;
+	background-color: blue;
+	text-transform: uppercase;
+	color: #fff;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+
+}
+
+section.rules .rules-set .rules-set-content{
+	height: 100%;
+	background-color: rgb(195, 241, 241);
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+
+}
+
+section.rules .rules-set ul{
+	list-style-type: none;
+}
+
+section.rules .rules-set ul li{
+	font-size:x-large;
+	padding: 15px;
+}
+
+
+	/* Section 3 Quiz info */
+section.quiz-info{
+	display: flex;	
+	background-color: #fff;
+}
+
+section.quiz-info .quiz-info-content{
+	width: 60%;
+	/* border: 2px solid #000000; */
+	border-radius: 40px 0 0 40px;
+	background-color: rgb(195, 241, 241);	
+}
+
+section.quiz-info .quiz-info-content h3{
+text-align: center;
+font-size: xx-large;
+margin: 10px 0 20px;
+text-transform: uppercase;
+}
+
+section.quiz-info .quiz-info-content ul li{
+	text-align: justify;
+	padding-right: 40px;
+	font-size: larger;
+	font-weight: 400;
+}
+
+section.quiz-info .quiz-info-content ul li:first-child{
+	margin-bottom: 15px;
+}
+
+section.quiz-info .quiz-info-content ul li:last-child{
+	margin-top: 15px;
+}
+
+section.last-container{
+	background-color: rgb(255, 217, 223);
+	display: flex;
+	justify-content: space-around;
+}
+
+/* #endregion */
+
+
+
+

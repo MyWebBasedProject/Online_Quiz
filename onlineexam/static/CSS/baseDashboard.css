@@ -1,0 +1,220 @@
+html{
+    height: 100%;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    height: 100%;
+    padding: 0;
+}
+
+/* #region Overall Structure And Exam Card */
+
+.my-body{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    /* border: 2px solid black; */
+}
+
+.my-body .side-nav{
+    width: 25%;
+    height: 100%;
+    background-color: #15155e;
+    /* border: 2px solid red; */
+}
+
+.my-body .dashboard-body{
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+}
+
+.my-body .dashboard-body{
+    background-color: #ffffff;
+    /* border: 2px solid blue'; */
+    overflow: scroll;
+    padding: 2%;
+    position: relative;
+}
+
+.my-body .dashboard-body .exam-info-container{
+    /*display: flex; */
+    /* flex-direction: column; */
+    border: 0.2px solid white;
+    margin: 1.5%;
+    box-shadow: 2px 2px 15px 1px lightgrey;
+    width: 30%;
+    border-radius: 25px;
+
+    display: inline-block;
+}
+
+.my-body .dashboard-body .exam-info-container .exam-info-container-heading{
+    padding: 2%;
+    font-size: x-large;
+    font-family: "Ubuntu";
+    color: white;
+    background-color: #2574bf;
+    padding-left: 8%;
+    border-radius: 15px 15px 0 0;
+}
+
+.my-body .dashboard-body .exam-info-container .exam-info-container-body{
+    font-family: "Ubuntu";
+    padding: 3%;
+    position: relative;
+}
+
+.my-body .dashboard-body .exam-info-container h4{
+    display: inline-block;
+    margin: 0px;
+    font-weight: 400;
+}
+
+.my-body .dashboard-body .exam-info-container .exam-info-container-body h4,
+.my-body .dashboard-body .exam-info-container .exam-info-container-body button{
+    display: inline-block;
+    width: 48%;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 1.7vh;
+    text-align: center;
+}
+
+.my-body .dashboard-body .exam-info-container .exam-info-container-body button{
+    position: absolute;
+    width: 11vh;
+    height: 4vh;
+    border-radius: 20px;
+    bottom: 0;
+    transform: translateY(80%);
+    text-align: center;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.my-body .dashboard-body .exam-info-container .exam-info-container-body button a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.6vh;
+    font-family: 'ubuntu';
+}
+.green-button{
+    background-color:green;
+}
+
+.red-button{
+    right: 0;
+    background-color: red;
+}
+
+/* #endregion */
+
+/*#region Side Nav Bar */
+
+.my-body .side-nav .profile-img-area{
+    width: 160px;
+    height: 160px;
+    margin: 10% auto;
+    border: 8px solid #02022a;
+    background-color: #222222;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.my-body .side-nav .profile-img-area img{
+    /* width: 100%; */
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.my-body .side-nav .username{
+    color: #fff;
+    font-family: 'Heebo';
+    display: block;
+    text-align: center;
+    margin-top: 0;
+}
+
+.my-body .side-nav .side-nav-content-body ul{
+    font-family: "Heebo";
+    /* border:  2px solid yellow; */
+    padding: 0;
+    margin: 0;
+}
+
+.my-body .side-nav .side-nav-content-body ul li{
+    list-style-type: none;
+    /* border: 2px solid red; */
+}
+
+.my-body .side-nav .side-nav-content-body ul li a{
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 5% 0 2% 5%;
+    cursor: pointer;
+    display: block;
+}
+
+
+.my-body .side-nav .side-nav-content-body ul li:hover{
+    background-color: rgba(82, 82, 255, 0.678);
+} 
+
+.my-body.side-nav.side-nav-content-body ul li:active{
+    background-color: rgb(0, 0, 0);
+}
+
+/*#endregion  */
+
+/* #region Delete Message */
+
+.my-body #delete-form{
+    position: absolute;
+    top: 0;
+    margin: 2%;
+    /* position: relative; */
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    z-index: 2;
+    background-color: rgba(255,255,255,0.9);
+    left: 0;
+}
+
+.my-body #delete-form .form-container{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    background-color: #15155e;
+}
+
+.my-body #delete-form .form-container h4{
+    color: #fff;
+    text-align: center;
+}
+
+.my-body #delete-form .form-container button{
+    border: none;
+    padding: 1%;
+    width: 15%;
+    border-radius: 25px;
+    margin:2%;
+    color: white;
+}
+
+/* #endregion */
+

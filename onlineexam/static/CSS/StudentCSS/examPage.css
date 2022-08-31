@@ -1,0 +1,104 @@
+body{
+    padding: 0;
+}
+
+/* #region timer-submit*/
+
+.timer-submit::after{
+    content: "";
+    clear: both;
+    display: table; 
+}
+.timer-submit{
+    padding: 2% 1%;
+    position: fixed;
+    z-index: 1;
+    width: 88%;
+    background-color: white;
+}
+
+.timer-submit .timer{
+    float: left;
+}
+
+.timer-submit .timer h3{
+    margin: 0;
+}
+
+.timer-submit button[type="submit"]{
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(0, 151, 0);
+    padding: .5% 2%;
+    text-transform: uppercase;
+    color: white;
+    font-family: "Heebo";
+    float: right;
+}
+
+
+/* #endregion */
+
+.exam-results{
+    text-align: center;
+}
+
+.exam-form-container{
+    margin: 0 5%;
+}
+
+.exam-result-body .question-result{
+    border-radius: 25px;
+    background-color: rgb(250, 250, 250);
+    padding: 0.5%;
+    margin: 2% 0;
+}
+
+.exam-result-body .question-result .question{
+    /* border: 1px solid rgb(153, 153, 153); */
+    border-radius: 5px;
+    min-height: 80px;
+}
+.exam-result-body .question-result .question h4{
+    margin: 0 1%;
+}
+
+.exam-result-body .question-result .option-set{
+    /* min-height: 200px; */
+}
+
+.option{
+    border: 1px solid rgb(194, 194, 194);
+    background-color: white;
+    min-height: 40px;
+    border-radius: 25px;
+    padding: 0 2%;
+    margin: 0.5% 0;
+    vertical-align: middle;
+}
+
+label:hover .option{
+    border: 1px solid rgb(251, 255, 0);
+    background-color: rgb(254, 255, 195);
+    cursor: pointer;
+}
+
+.option h5{
+    margin: 0;
+    display: inline-block;
+}
+
+.green-container{
+    border: 2px solid green;
+    background-color: rgb(215, 255, 215);
+}
+
+.red-container{
+    border: 2px solid rgb(255, 0, 0);
+    background-color: rgb(255, 215, 215);
+}
+
+input[type="radio"]{
+    visibility: hidden;    
+}
+

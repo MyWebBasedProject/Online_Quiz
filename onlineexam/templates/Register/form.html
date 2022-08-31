@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    
+{% endblock %}
+
+{% block body %}
+
+    <header>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="/register">register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="alert alert-success">
+        <strong>{{ message }}</strong>
+    </div>
+<!--  -->
+        
+        <form name="registration_form" onsubmit="return validateForm()"  action="" method="POST" enctype="multipart/form-data" >
+            <div class="form-top-container">
+
+                <div class="form-content-divison">
+                    <input class="form-input" type="text" id="first_name" name="first_name" placeholder="First Name">
+
+                    <input class="form-input" type="text" id="last_name" name="last_name" placeholder="Last Name">
+
+                    <input class="form-input" type="email" id="email" name="email" placeholder="Email ID">
+
+                    {% block form_content_1 %}
+
+                    {% endblock %}
+
+                    <input class="form-input" type="password" id="password" name="password" placeholder="Password" onkeyup="checkPasswordStrength()">
+                        
+                    <h3 class="err_msg" id="password-strength-status"></h3>
+                    
+                </div>
+
+                <div class="form-content-divison">
+                    <input class="form-input" type="text" id="middle_name" name="middle_name" placeholder="Middle Name">
+
+                    <div style="display: flex; align-items: center;" class="dob form-input">
+                        <label for="dob">Date Of Birth</label>
+                        <input style="color: white;" type="date" id="dob" name="dob" max="2006-01-01">
+                    </div>
+
+                    {% block form_content_2 %}
+
+                    {% endblock %}
+
+                    <div class="form-input image">
+                        <label for="profile_pic">Upload Profile Image <i style="color: white;" class="fa fa-upload"></i></label>
+                        <input style="display: none;" type="file" name="profile_pic" id="profile_pic" accept="image/*" multiple size="1">
+                    </div>
+                    
+
+                    <input class="form-input" type="password" id="Confirm_password" name="Confirm_password" placeholder="Confirm password" onkeyup="checkPassword()">
+
+                    <h3 class="err_msg" id="password-status"></h3>
+
+
+                </div>    
+            </div>
+            
+            <div class="form-submit-divison">
+                <input class="form-input" type="submit" value="Submit" name="submit">
+                <h3 id="err_msg" class="err_msg" style="text-align: center;">{{ msg }}</h3>
+            </div>        
+        </form>
+
+{% endblock %}

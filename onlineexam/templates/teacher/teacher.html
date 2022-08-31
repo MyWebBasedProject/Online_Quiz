@@ -1,0 +1,44 @@
+{% extends 'baseDashboard.html' %}
+
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+<script src="{{url_for('static', filename='JS/dashboard.js')}}" ></script>
+<title>Teacher Dashboard</title>
+{% endblock %} 
+
+
+
+{% block side_nav_content %}
+    <li><a href="/teacher/teacher/{{username}}">My DashBoard</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createClassroom">Create Class Room</a></li>    
+    
+{% endblock %}
+
+{% block content_container %}
+
+    <div id="delete-form" style="display: none;">
+        <div class="form-container">
+            <h4 id="delete-msg">Do you want to Delete classroom?</h4>
+            <button style="cursor: pointer;" class="red-button" onclick="deleteTeacherClassroom('/deleteTeacherClassroom')">Yes</button>
+            <button style="cursor: pointer;" class="green-button" onclick="closeForm()" >No</button>
+        </div>
+    </div>
+
+    {% for class_data in data: %}
+    <div class="exam-info-container">
+        <div class="exam-info-container-heading">
+            <h4 >{{class_data['subject_name']}} - {{class_data['grad_year']}}</h4>
+        </div>
+        <!-- onclick="buttonClicked('/storeClassId', '{{class_data.class_id}}' )" -->
+        <div class="exam-info-container-body">
+            <button class="green-button" onclick="buttonClicked('/storeClassId', '{{class_data.class_id}}' )" ><a
+                href="/teacher/teacher/{{username}}/viewAllQuiz" >View Class</a></button>
+            <button class="red-button" onclick="deleteButton('{{class_data.class_id}}')" ><a>Delete</a></button>
+            <h4>Branch: {{class_data['branch']}}</h4>
+            <h4>Semester: {{class_data['semester']}}</h4>
+            <h4>Class code: {{class_data['class_id']}}</h4>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboardForm.css') }}"/>
+    <title>Create Class Room</title>
+{% endblock %} 
+
+
+{% block side_nav_content %}
+    <li><a href="/teacher/teacher/{{username}}">My DashBoard</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createClassroom">Create Class Room</a></li>
+    
+{% endblock %}
+
+{% block content_container %}
+    <div class="form-container">
+        <form action="" method="post">
+            <div class="form-input">
+                <label for="quiz_title">Quiz Title</label>
+                <input type="text" name="quiz_title" id="quiz_title">
+            </div>
+
+            <div class="form-input">
+                <label for="no_question">No Of Questions</label>
+                <input type="text" name="no_question" id="no_question">
+            </div>
+
+            <div class="form-input">
+                <label for="exam_date_time">Exam Date and Time</label>
+                <input type="datetime-local" name="exam_date_time" id="exam_date">
+            </div>
+
+            <div class="form-input">
+                <label for="exam_duration">Duration</label>
+                <input type="text" name="exam_duration" id="exam_duration">
+            </div>
+
+            <input type="submit" class="blue-button" value="Create Quiz">
+        </form>
+    </div>
+{% endblock %}

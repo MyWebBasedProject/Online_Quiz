@@ -1,0 +1,25 @@
+{% extends 'base.html' %} 
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/StudentCSS/examPage.css') }}"/>
+    <script src="{{url_for('static',filename='JS/examPage.js')}}"></script>
+    <!-- <script src="{{url_for('static',filename='JS/proctor.js')}}"></script> -->
+{% endblock %}
+
+{% block body %}
+    <div class="exam-form-container">
+
+        <form action="/getStudentExamResults" method="POST">
+            <div class="timer-submit">
+                <div class="timer">
+                    <h3>Time Remaining: </h3>
+                </div>
+                <button type="submit">Submit</button>
+            </div>
+            
+            <div class="exam-result-body" style="padding-top: 5%;">
+                    
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,16 +1,72 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Task Master</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/index.css') }}"/>
 {% endblock %}
 
 {% block body %}
 
-<div class="content">
-    <h1 style="text-align: center;">Yolo App</h1>
+	<header>
+		<div class="container">
+			<nav>
+				<ul>
+					<li style="float: left;"><a href="/login">Login</a></li>
+					<li style="float: right;"><a href="/register">SignUp</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
 
-    <form action="/face_detect" method="POST">
-        <input type="submit" value="Start App">
-    </form>
-</div>
+	<!-- Section Information of Quiz -->
+	<section class="long-container heading-container">
+		<h1>Online Quiz Examination</h1>
+		<h3>Online Test Now With Fair Means</h3>
+		<img style="position: absolute;
+		top:50px; left:0;" src="../static/homepage_images/index_standing.png" alt="Index Standing">
+
+		<img style="position: absolute;
+		top:50px; right:0;" src="../static/homepage_images/index_sitting.png" alt="Index Sitting">
+	</section>
+
+	<section class="long-container rules">
+		<img src="../static/homepage_images/face_reognition.png" alt="Face Recognition">
+		<div class="rules-set">
+			<h2>Create a Proctored Test within Minutes</h2>
+			<div class="rules-set-content">
+				<ul>
+					<li>Create a New Test or Modify the existing Test.</li>
+					<li>Get all the report of the students detected during the test.</li>
+					<li>Real time Face Detecting during entire Exam Duration.</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="long-container quiz-info">
+		<div class="quiz-info-content">
+			<h3>Quiz info</h3>
+			<ul>
+				<li>This Quiz System is a web-based examination system where quiz is taken
+					online i.e. through the internet using computer system. A teacher has control
+					over the questions and is supposed to make schedule for the quiz. The system
+					carries out the examination and auto-grading for multiple choice questions
+					which is fed into the system</li>
+
+					<li>The candidate can login through computer with their Registered e-mail and
+						Password matching the details to the student’s database, then they can take
+						the exam. Candidate can give their course’s examination as scheduled by
+						the Teacher and get their results within few minutes after the exam is concluded</li>
+			</ul>
+		</div>
+		<img src="../static/homepage_images/index_tinking.png" alt="">
+	</section>
+
+    <footer>
+		<h4>With Love, Created in Mumbai, India</h4>
+	</footer>
+
+
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/StudentCSS/joinClassroom.css')}}"/>
+    <title>Student Dashboard</title>
+{% endblock %} 
+
+{% block side_nav_content %}
+    <li><a href="/student/student/{{username}}">My DashBoard</a></li>
+{% endblock %}
+
+{% block content_container %}
+<h2 style="display: block; margin: 0 auto; text-align: center;">{{form_submitted_validation}}</h2>
+    <div class="form-container">
+        <form action="" method="POST">
+            <div class="form-input">
+                <label style="display: block;" for="class_id">Enter Class id</label>
+                <input type="text" name="class_id" id="class_id">
+            </div>
+
+            <div class="form-input">
+                <input type="submit" value="Join">
+            </div>
+        </form>
+    </div>    
+{% endblock %}
+            

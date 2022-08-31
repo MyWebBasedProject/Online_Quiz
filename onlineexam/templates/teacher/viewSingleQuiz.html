@@ -1,0 +1,84 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/TeacherCSS/viewSingleQuiz.css') }}"/>
+    <script src="{{url_for('static', filename='JS/viewSingleQuiz.js')}}"></script>
+    <title> View Quiz </title>
+{% endblock %} 
+
+{% block side_nav_content %} 
+    <li><a href="/teacher/teacher/{{username}}">My DashBoard</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createQuiz">Create quiz</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createClassroom">Create Class Room</a></li>   
+{% endblock %}
+
+{% block content_container %}
+    <div class="quiz-form-container">
+        <div class="question">
+            <label for="question_text">Enter Question Text</label>
+            <textarea name="question_text" id="question_text" ></textarea>
+        </div>
+        <div class="question-img">
+            <div class="img-label">
+                <label for="question_image" id="upload-image-label" >Upload Question Image <i style="color: white;" class="fa fa-upload"></i> </label>
+                <input onchange="uploadQuestionImage(event)" style="display: none;" type="file" name="question_image" id="question_image" accept="image/*" multiple size="1">
+            </div>
+
+            <div class="img-preview">
+                <div class="img-preview-box">
+                    <img id="img-preview"  style="display: block; margin: 0 auto; height: 100%;" src="" alt="Image Preview">
+                </div>
+            </div>
+
+        </div>
+        <div class="options">
+            <div class="question-option">
+                <label for="option_1">Option 1</label>
+                <input type="text" name="option_1" id="option_1">
+            </div>
+
+            <div class="question-option">
+                <label for="option_2">Option 2</label>
+                <input type="text" name="option_2" id="option_2"> 
+            </div>
+
+            <div class="question-option">
+                <label for="option_3">Option 3</label>
+                <input type="text" name="option_3" id="option_3">
+            </div>
+
+            <div class="question-option">
+                <label for="option_4">Option 4</label>
+                <input type="text" name="option_4" id="option_4">
+                
+            </div>
+        </div>
+        <div class="set-answer">
+            <label for="answer">Correct Option</label>
+            <input type="number" name="answer" id="answer" max="4" min="1">
+        </div>
+        <div class="buttons-grid">
+            <div class="grid-item set-question" style="justify-content: center;">
+                <button onclick="teacherSetQuestion('1')" id="set-question">Set Question</button>
+            </div>
+            <div class="grid-item" style="justify-content: center;">
+                <div class="buttons-container">
+                    <button class="navigation-button" id="back-button" onclick="retriveQuestion('1', '{{total_count}}','minus')" ><h4 style="margin: 0; font-weight:500;"> &larr; </h4></button>
+                    <h4 id="current-total" style="margin: 0 10%;"> 1/{{total_count}} </h4>
+                    <button class="navigation-button" id="next-button" onclick="retriveQuestion('1', '{{total_count}}','plus')"><h4 style="margin: 0"> &rarr; </h4></button>
+                </div>
+            </div>
+            <div class="grid-item note" style="justify-content: left;">
+                <h4>*Press Set Question Button To Update/Set Question </h4>
+            </div>
+         
+        </div>
+    </div>
+    <script>
+        $(function(){
+            retriveOperation(1, '{{total_count}}');
+        });
+        
+    </script>
+{% endblock %}

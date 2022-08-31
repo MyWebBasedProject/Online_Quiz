@@ -1,0 +1,58 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <script src="{{url_for('static', filename='JS/dashboard.js')}}" ></script>
+    <title> {{class_details[0]['subject_name']}} Quiz List </title>
+{% endblock %} 
+
+{% block side_nav_content %} 
+    <li><a href="/teacher/teacher/{{username}}">My DashBoard</a></li> 
+    <li><a href="/teacher/teacher/{{username}}/createQuiz">Create quiz</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createClassroom">Create Class Room</a></li>  
+{% endblock %}
+
+{% block content_container %}
+
+    <h3> {{class_details[0]['subject_name']}} / {{class_details[0]['branch']}} </h3>
+    <h4 id="msg" style="display: none;">No Exams Created Currently</h4>
+
+    <div id="delete-form" style="display: none;">
+        <div class="form-container">
+            <h4 id="delete-msg">Do you want to Delete classroom?</h4>
+            <button style="cursor: pointer;" class="red-button" onclick="deleteTeacherQuiz('/deleteTeacherQuiz')">Yes</button>
+            <button style="cursor: pointer;" class="green-button" onclick="closeForm()" >No</button>
+        </div>
+    </div>
+
+
+    
+    {% for i in range(0, quiz_details_count) %}
+    <div class="exam-info-container">
+        <div class="exam-info-container-heading">
+            <h4>{{quiz_details[i]['quiz_title']}}</h4>
+        </div>
+        <div class="exam-info-container-body">
+            {% if exam_completed[i]== false: %}
+                <button class="green-button" onclick="buttonClicked('/storeQuizId', '{{quiz_details[i].quiz_id}}' )"><a href="/teacher/teacher/{{username}}/viewSingleQuiz">View Quiz</a></button>
+            {% else: %}
+                <button class="green-button" onclick="buttonClicked('/storeQuizId', '{{quiz_details[i].quiz_id}}' )" ><a href="/teacher/teacher/{{username}}/examReport">Exam Report</a></button>   
+            {% endif %}
+            <button class="red-button" onclick="deleteButton('{{quiz_details[i].quiz_id}}')" ><a>Delete</a></button>      
+            <h4>Questions: {{quiz_details[i]['no_of_questions']}}</h4>
+            <h4>Duration: {{quiz_details[i]['duration']}}</h4>
+            <h4 style="width:90%">Date Time: {{quiz_details[i]['quiz_date_time']}}</h4>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        $(function(){
+            console.log($(".exam-info-container").text()=="");
+            if($(".exam-info-container").text() == "")
+            {
+                $("#msg").attr("style","display: block; text-align: center;");
+            }
+        });
+    </script>
+{% endblock %}

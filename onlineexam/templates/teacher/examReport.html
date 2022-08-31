@@ -1,0 +1,66 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/table.css') }}"/>
+    <script src="{{url_for('static', filename='JS/dashboard.js')}}" ></script>
+{% endblock %} 
+
+{% block side_nav_content %} 
+    <li><a href="/teacher/teacher/{{username}}">My DashBoard</a></li> 
+    <li><a href="/teacher/teacher/{{username}}/createQuiz">Create quiz</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createClassroom">Create Class Room</a></li>  
+{% endblock %}
+
+{% block content_container %}
+    <table class="record-table">
+        <thead>
+          <tr>
+            <th style="width: 30%;">Name</th>
+            <th style="width: 30%;">Student ID</th>
+            <th style="width: 20%;">Exam Report</th>
+            <th style="width: 20%;">Proctor Report</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for student_detail in student_details: %}
+                <tr>
+                    <td>{{student_detail['first_name']+" " + student_detail['last_name']}}</td>
+                    <td>{{student_detail['id']}}</td>
+                    <td>
+                        <button class="green-button" onclick="storeStudentID('{{student_detail.id}}')">
+                        <a href="/teacher/teacher/{{username}}/examReport/examResults"> 
+                            View Exam Report
+                        </a> 
+                        </button>
+                    </td>
+                    <td>
+                        <button class="green-button" onclick="storeStudentID('{{student_detail.id}}')">
+                            <a href="/teacher/teacher/{{username}}/examReport/proctoreReport">
+                            View Proctor Report
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+
+        function storeStudentID(id){
+            id = parseInt(id);
+            $.ajax({
+                url: "/storeStudentId",
+                method: "POST",
+                data:{'id': id},
+                success: 
+                function(data){
+                    console.log(data)
+                }
+            });
+        }
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/table.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/TeacherCSS/examResults.css') }}"/>
+    <script src="{{url_for('static', filename='JS/dashboard.js')}}" ></script>
+{% endblock %} 
+
+{% block side_nav_content %} 
+    <li><a href="/teacher/teacher/{{username}}">My DashBoard</a></li> 
+    <li><a href="/teacher/teacher/{{username}}/createQuiz">Create quiz</a></li>
+    <li><a href="/teacher/teacher/{{username}}/createClassroom">Create Class Room</a></li>  
+{% endblock %}
+
+{% block content_container %}
+    
+    <div class='exam-results'>
+        <h3>Marks Scored: /</h3>
+    </div>
+    <div class="exam-result-body">
+<!--         
+        <div class="question-result">
+            <div class="question">
+                <h5>Question: </h5>
+            </div>
+            <div class="option-set">
+                <div class="option">
+                    <h6>1: </h6>
+                </div>
+                <div class="option">
+                    <h6>2: </h6>
+                </div>
+                <div class="option">
+                    <h6>3: </h6>
+                </div>
+                <div class="option">
+                    <h6>4: </h6>
+                </div>
+            </div>
+        </div>
+         -->
+    </div>
+
+    <script>
+
+        get_details();
+        function get_details() 
+        {
+            $.ajax({
+                url: '/teacher/getExamResult',
+                method: "GET",
+                success: function(data){
+                    let marks = data['marks_scored'];
+                    let total_question = data['total_questions'];
+                    let response_recorded = data['response'];
+                    let questions = data['correct_answer'];
+                    let student_id = data['student_id'];
+                    
+                    $(".exam-results").children("h3").text("Marks Scored: " + marks + "/" + total_question);
+
+                    for(let i=0; i<total_question; i++)
+                    {
+                        $(".exam-result-body").append("\
+                        <div class='question-result' id="+ (i+1) +">\
+                            <div class='question'>\
+                                <h5>Question:"+ questions[i]['question'] +" </h5>\
+                            </div>\
+                            <div class='option-set'>\
+                                <div class='option 1'>\
+                                    <h6>1: "+ questions[i]['option_1'] +" </h6>\
+                                </div>\
+                                <div class='option 2'>\
+                                    <h6>2: "+ questions[i]['option_2'] +" </h6>\
+                                </div>\
+                                <div class='option 3'>\
+                                    <h6>3: "+ questions[i]['option_3'] +" </h6>\
+                                </div>\
+                                <div class='option 4'>\
+                                    <h6>4: "+ questions[i]['option_4'] +" </h6>\
+                                </div>\
+                            </div>\
+                        </div>")
+
+                        let selected_option = response_recorded[i][student_id]; 
+                        let correct_option = questions[i]['answer'];
+                        
+                        let id = i+1;
+                        if(selected_option == correct_option)
+                        {
+                            $("#"+id).children(".option-set").children("."+selected_option).addClass("green-container");
+                        }
+                        else{
+                            $("#"+id).children(".option-set").children("."+correct_option).addClass("green-container");
+                            $("#"+id).children(".option-set").children("."+selected_option).addClass("red-container");
+                            
+                        }
+                    }
+                }
+            });   
+        }
+    </script>
+{% endblock %}
+
+<!-- if(selected_option == correct_option)
+{
+    $("."+correct_option).addClass("green-container");
+}
+else
+{
+    $("."+selected_option).addClass("red-container");
+    $("."+correct_option).addClass("green-container");
+}                        -->

@@ -1,0 +1,25 @@
+{% extends 'base.html' %} 
+
+{% block body %}
+<div class="my-body">
+  <div class="side-nav">
+    <div class="profile-img-area">
+      <img src="{{details}}" alt="Profile Pic">
+    </div>
+    <h4 class="username">{{username}}</h4>
+    <div class="side-nav-content-body">
+      <ul>
+        {% block side_nav_content %} 
+        
+        {% endblock %}
+        <li><a href="/">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="dashboard-body">
+    {% block content_container %} 
+    
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}

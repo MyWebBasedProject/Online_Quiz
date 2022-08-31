@@ -1,54 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'Register/form.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Student SignUp</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='StudentSignUp.css') }}">
-
-</head>
-
-<body>
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='JS/form.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/form.css') }}">
+    <title>Student Sign Up</title>
+{% endblock %}
 
 
-    <div class="top">
+    {% block form_content_1 %}
+        <input class="form-input" type="text" id="sem" name="semester" placeholder="Semester">
+    {% endblock %}
 
-        <ul>
-            <li style="float:left;"><a href="http://127.0.0.1:5000">Home</a></li>
-        </ul>
-    </div>
-    <div class="alert alert-success">
-        <strong>{{ message }}</strong>
-    </div>
-
-    <div class="Form">
-
-        <form name="SignUpForm" action="StudentSignUp" enctype="multipart/form-data" method="POST">
-
-            <input type="text" id="first_name" name="first_name" placeholder="First Name">
-
-            <input style="float: right; margin:-3.8rem 12px ;" type="text" id="last_name" name="last_name" placeholder="Last Name"><br>
-
-            <input type="text" id="middle_name" name="middle_name" placeholder="Middle Name">
-            <input style="float: right;margin:-3.6rem 0.8rem;" input type="date" id="dob" name="dob" max="2006-01-01">
-            <br>
-
-            <input type="email" id="email" name="email" placeholder="Email ID"><br>
-
-            <input type="password" id="password" name="password" placeholder="password" onkeyup="checkPasswordStrength()">
-            <div id="password-strength-status"></div><br>
-            <input type="password" id="Confirm_password" name="Confirm_password" placeholder="Confirm password" onkeyup="checkPassword()">
-            <div id="password-status"></div><br>
-
-            <label for="branch"><p class="text" style="font-size: 110%;display: inline-block;">Branch:</p></label>
-            <select style="float: right;margin:-2.8rem 20rem ;" id="branch" name="branch">
+    {% block form_content_2 %}
+        <div style="display: flex; align-items: center;" class="branch form-input">
+            <label for="branch">Branch:</label>
+            <select style="width: 75%; margin-left: 5%;" id="branch" name="branch">
                 <option value="select">Select</option>
                 <option value="Electrical Engineering">(EE) Electrical Engineering</option>
                 <option value="Electronics and Telecommunication Engineering">(EXTC) Electronics and Telecommunication Engineering</option>
@@ -57,58 +23,6 @@
                 <option value="Information and Technology">(IT) Information and Technology</option>
                 <option value="Mechanical Engineering">(ME) Mechanical Engineering</option>
             </select>
+        </div>
+    {% endblock %}
 
-            <input style="float:right;margin:-2.9rem 0.8rem ;" type="text" id="sem" name="semester" placeholder="Semester">
-            <br><br>
-            <label><p class="text">Upload Your Profile Image: </label>
-            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" multiple size="1">
-
-            <br>
-            <div class="err_msg" style="text-align: center;">{{ msg }}</div>
-            <input type="submit" value="Submit" name="submit">
-        </form>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-        function checkPasswordStrength() {
-            var number = /([0-9])/;
-            var alphabets = /([a-zA-Z])/;
-            var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
-            if ($('#password').val().length < 6) {
-                $('#password-strength-status').removeClass();
-                $('#password-strength-status').addClass('weak-password');
-                $('#password-strength-status').html("Weak (should be atleast 6 characters.)");
-            } else {
-                if ($('#password').val().match(number) && $('#password').val().match(alphabets) && $('#password').val().match(special_characters)) {
-                    $('#password-strength-status').removeClass();
-                    $('#password-strength-status').addClass('strong-password');
-                    $('#password-strength-status').html("Strong");
-                } else {
-                    $('#password-strength-status').removeClass();
-                    $('#password-strength-status').addClass('medium-password');
-                    $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
-                }
-            }
-        }
-
-        function checkPassword() {
-            if (($('#password').val().length == 0) || ($('#Confirm_password').val().length == 0)) {
-                $('#password-status').removeClass()
-                $('#password-status').addClass("weak-password")
-                $('#password-status').html("Password field is empty")
-            } else {
-                if (($('#password').val()) == ($('#Confirm_password').val())) {
-                    $('#password-status').removeClass()
-                    $('#password-status').addClass("strong-password")
-                    $('#password-status').html("Password matched")
-                } else {
-                    $('#password-status').removeClass()
-                    $('#password-status').addClass("weak-password")
-                    $('#password-status').html("Password doesn't match")
-                }
-            }
-        }
-    </script>
-</body>
-
-</html>

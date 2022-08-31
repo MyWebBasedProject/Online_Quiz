@@ -1,0 +1,61 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+    <script src="{{url_for('static', filename='JS/dashboard.js')}}" ></script>
+    <title>Exam</title>
+{% endblock %} 
+
+{% block side_nav_content %}
+    <li><a href="/student/student/{{username}}">My DashBoard</a></li>
+    <li><a href="/student/student/{{username}}/joinClassroom">Join Classroom</a></li>
+{% endblock %}
+
+{% block content_container %}
+    <h4 id="msg" style="display: none;">No Quizzes Currently</h4>
+
+    {% for i in range(0, row_count): %}
+    <div class="exam-info-container">
+        <div class="exam-info-container-heading">
+            <h4>{{quiz_details[i]['quiz_title']}}</h4>
+        </div>
+        <div class="exam-info-container-body">
+            {% if exam_started[i]: %}
+                <button style="cursor: pointer; color: white;" class="green-button" onclick="popitup('http://127.0.0.1:5000/student/examPage','{{quiz_details[i].quiz_id}}')" >Start Quiz</button>
+            {% endif %}
+
+            <h4>No. Of Questions: {{quiz_details[i]['no_of_questions']}}</h4>
+            <h4>Duration: {{quiz_details[i]['duration']}}</h4>
+            <h4 style="width: 100%;">Date/Time : {{quiz_details[i]['quiz_date_time']}}</h4>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        $(function(){
+            console.log($(".exam-info-container").text()=="");
+            if($(".exam-info-container").text() == "")
+            {
+                $("#msg").attr("style","display: block; text-align: center;");
+            }
+        });
+
+        function popitup(exam_url, quiz_id) {
+
+            $.ajax({
+                url: "/storeQuizId",
+                method: "POST",
+                data:{'data':quiz_id},
+                success: function(){
+                    newwindow = window.open(exam_url);
+                    if (window.focus) {
+                        newwindow.focus()
+                    }
+                }
+            });
+
+            return false;
+        }
+    </script>
+
+{% endblock %}

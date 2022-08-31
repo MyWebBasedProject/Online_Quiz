@@ -1,0 +1,62 @@
+{% extends 'baseDashboard.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/baseDashboard.css') }}"/>
+<script src="{{url_for('static', filename='JS/dashboard.js')}}" ></script>
+<script src="{{url_for('static', filename='JS/viewSingleQuiz.js')}}" ></script>
+<title>Student Dashboard</title>
+{% endblock %} 
+
+{% block side_nav_content %}
+    <li><a href="/student/student/{{username}}">My DashBoard</a></li>
+    <li><a href="/student/student/{{username}}/joinClassroom">Join Classroom</a></li>
+    <!-- <li><a onclick="popitup('/student/StartQuiz')">Start Quiz</a></li> -->
+{% endblock %}
+
+{% block content_container %}
+    <h4 id="msg" style="display: none;">No Classroom Currently</h4>
+    <div id="delete-form" style="display: none;">
+        <div class="form-container">
+            <h4 id="delete-msg">Do you want to leave classroom?</h4>
+            <button style="cursor: pointer;" class="red-button" onclick="deleteStudentClassroom('/deleteStudentClassroom')">Yes</button>
+            <button style="cursor: pointer;" class="green-button" onclick="closeForm()" >No</button>
+        </div>
+    </div>
+
+    {% for class_details in classroom: %}
+    <div class="exam-info-container">
+        <div class="exam-info-container-heading">
+            <h4>{{class_details['class_id']}} - {{class_details['subject_name']}}</h4>
+        </div>
+        <div class="exam-info-container-body">
+            <button class="green-button" onclick="buttonClicked('/storeClassId', '{{class_details.class_id}}' )" >
+                <a href="/student/student/{{username}}/viewAllQuiz" >View Class</a>
+            </button>
+            <button class="red-button" onclick="deleteButton('{{class_details.class_id}}','displayStudentForm')" ><a>Leave</button>
+            <h4>Branch: {{class_details['branch']}}</h4>
+            <h4>Graduation Year: {{class_details['grad_year']}}</h4>
+            <h4>Semester: {{class_details['semester']}}</h4>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        function closeForm(){
+            console.log('hello');
+            $('#delete-form').attr('style','display:none;');
+        }
+
+        $(function(){
+            console.log($(".exam-info-container").text()=="");
+            if($(".exam-info-container").text() == "")
+            {
+                $("#msg").attr("style","display: block; text-align: center;");
+            }
+        });
+
+ 
+    </script>
+{% endblock %}
+
+<script language="javascript" type="text/javascript">
+</script>

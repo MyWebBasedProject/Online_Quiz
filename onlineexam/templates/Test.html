@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='Test.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Test.js') }}"></script>
+</head>
+
+<body>
+    <div style="float:left;padding: 15px;
+    color: #101010;
+    font-family: Raleway, sans-serif, Arial;
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5rem;">
+<div id="Timer"></div>
+</div><br><br>
+        <form name="Test" id="Test" action="/responseSubmitted" method="post">
+            <div class="questions"></div>
+            <input type="submit" id="endExamButton" value="Submit" name="submit">
+        </form>
+        
+    
+    </div>
+    <!--changes from-->    
+    <div class="card">
+    <div id="mobile"></div><br>
+    <div id="person"></div><br>
+    <div id="correct_person"></div><br>
+    <div id="faces"></div>
+    <!--changes end-->
+</div>
+</body>
+<script>
+    var date = "{{date}}";
+    var end = "{{duration}}";
+    var start = "{{start}}";
+    var starttime = date + " " + start;
+    var StartTimer = new Date(starttime).getTime();
+    var endtime = date + " " + end;
+    var countDown = new Date(endtime).getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+        var distance = countDown - now;
+        if (StartTimer > now) {
+            window.location.replace("http://127.0.0.1:5000/student/StartTest");
+        } else {
+            // Time calculations for days, hours, minutes and seconds
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("Timer").innerHTML = hours + ":" +
+                minutes + ":" + seconds;
+
+            // If the count down is over, write some text
+            if (distance < 0) {
+                clearInterval(x);
+                document.forms["Test"].submit();
+            }
+        }
+    }, 1000);
+
+    
+
+    </script>
+
+
+
+
+</html>

@@ -218,9 +218,9 @@ def retriveQuestion():
 def teacherSetQuestion():
     if request.method == "POST":
         question_id = request.form['question_id']
-        sql_query = f"UPDATE `{session['class_id']}_{session['quiz_id']}` SET question=%s, question_img=%s, option_1 = %s, option_2 = %s, option_3 = %s, option_4 = %s, answer = %s WHERE question_id = %s"
+        sql_query = f"UPDATE `{session['class_id']}_{session['quiz_id']}` SET question = %s,  option_1 = %s, option_2 = %s, option_3 = %s, option_4 = %s, answer = %s WHERE question_id = %s"
 
-        data = [request.form['question'], request.form['question_img'], request.form['option_1'], request.form['option_2'],
+        data = [request.form['question'], request.form['option_1'], request.form['option_2'],
                 request.form['option_3'], request.form['option_4'], request.form['answer'], question_id]
         CUID_SQL(sql_query, data)
         return ""
@@ -272,6 +272,8 @@ def uploadQuestionImage():
         path = os.path.join(parent_path, static_path)
         profile_pic.save(path)
         sql_query = f"UPDATE `{str(session['class_id'])}_{str(session['quiz_id'])}` SET question_img = %s  WHERE question_id = %s"
+        print(static_path)
+        print(question_id)
         data = [static_path, question_id]
         CUID_SQL(sql_query, data)
 
@@ -312,7 +314,7 @@ def student(username):
     class_list = query_details['rows'][0]
 
     class_dict_list = json.loads(class_list["class_joined"])
-    class_list = class_dict_list["class_joined"]
+    class_list = class_dict_list["class"]
 
     classroom = []
     for class_id in class_list:
@@ -343,10 +345,10 @@ def joinClassroom(username):
 
             json_data = json.loads(query_details['rows'][0]['class_joined'])
 
-            class_list = json_data["class_joined"]
+            class_list = json_data["class"]
 
             if class_list.count(class_id) == 0:
-                json_data["class_joined"].append(class_id)
+                json_data["class"].append(class_id)
                 sql_query = f"UPDATE student SET class_joined=%s WHERE id = %s"
                 json_data = json.dumps(json_data)
                 data = [json_data, session['id']]
@@ -567,7 +569,7 @@ def TeacherSignUp():
             mydb.connection.commit()
             msg = '%s %s, you have successfully registered ! Your Id is %s' % (
                 first_name, last_name, registration_id)
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
     return render_template('Register/TeacherSignUp.html', msg=msg)
 
 
@@ -603,13 +605,14 @@ def StudentSignUp():
             profile_pic = "/static/profilepics/student/%s" % (
                 name)
             sql_query = f"INSERT INTO student VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
+            class_dict = {"class": []}
             data = [registration_id, profile_pic, first_name, last_name,
-                    middle_name, dob, email, password, branch, semester, json.load('{"class"=[]}')]
+                    middle_name, dob, email, password, branch, semester, json.dumps(class_dict)]
             cursor.execute(sql_query, data)
             mydb.connection.commit()
             msg = '%s %s, you have successfully registered ! Your Id is %s' % (
                 first_name, last_name, registration_id)
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
 
     return render_template('Register/StudentSignUp.html', msg=msg)
 

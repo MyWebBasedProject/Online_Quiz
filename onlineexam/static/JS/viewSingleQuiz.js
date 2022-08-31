@@ -53,7 +53,6 @@ function retriveOperation(question_id, total_count){
 function teacherSetQuestion(question_id){
 
     let question = document.getElementById("question_text").value;
-    let question_img = document.getElementById("question_image").value;
     let option_1 = document.getElementById("option_1").value;
     let option_2 = document.getElementById("option_2").value;
     let option_3 = document.getElementById("option_3").value;
@@ -63,7 +62,7 @@ function teacherSetQuestion(question_id){
     $.ajax({
         url:"/teacher/setQuestion",
         type: "POST",
-        data: {'question':question, 'question_img': question_img, 'option_1':option_1,'option_2':option_2,'option_3':option_3,'option_4':option_4, 'answer':answer, 'question_id': question_id},
+        data: {'question':question, 'option_1':option_1,'option_2':option_2,'option_3':option_3,'option_4':option_4, 'answer':answer, 'question_id': question_id},
         success:function(){
             // window.location.reload();
             
@@ -88,8 +87,8 @@ function uploadQuestionImage(event){
     if(event.target.files.length == 1){
        
         var src = URL.createObjectURL(event.target.files[0]);
-        console.log(typeof(src));
-        console.log(typeof(event.target.files[0]));
+        console.log(src);
+        console.log(event.target.files[0]);
         var myImage = $("#img-preview");
         myImage.attr("src", src);
         myImage.attr("style", "display: block; height: 100%; margin: 0 auto;");
@@ -111,10 +110,13 @@ function uploadQuestionImage(event){
             processData: false,
             contentType: false,
             success: (image_path)=>{
+                
+                
                 $('#img-preview').attr("src", "http://127.0.0.1:5000/"+image_path)
 
                 document.getElementById("upload-image-label").innerHTML = "Image Uploaded Successfully. Upload again?";
                 document.getElementById("upload-image-label").style = "background-color: white; color:blue; border:2px solid blue;";
+
             }
         });  
 

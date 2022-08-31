@@ -50,7 +50,7 @@ function get_details()
                 if(questions[i]['question_img'] != "")
                 {
                     $(".img-container").children("img").attr("src","http://127.0.0.1:5000/"+questions[i]['question_img']);
-                    $(".img-container").children("img").attr("style","margin: 0 auto; display: block; heigh: 100%;");
+                    $(".img-container").children("img").attr("style","margin: 0 auto; display: block; max-height: 300px;");
                 }
             }
         }

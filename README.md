@@ -30,6 +30,10 @@
 <img src="SS/createQuiz.png">
 <br><br>
 
+<h3>view Quizzes Of Particular Classroom</h3>
+<img src="SS/viewQuizzesParticularClassroom.png">
+<br><br>
+
 <h3>Teacher Dashboard View Class</h3>
 <img src="SS/teacherDashboardViewClass.png">
 <br><br>
@@ -50,3 +54,30 @@
 <img src="SS/viewQuizzesParticularClassroom.png">
 <br><br>
 
+<h3>View Report Of Students Given Exam</h3>
+<img src="SS/ViewReportOfStudentsGivenExam.png">
+<br><br>
+
+<h3>Student Classroom Dashboard</h3>
+<img src="SS/studentClassroomDashboard.png">
+<br><br>
+
+<h3>Enter Class ID Join Class</h3>
+<img src="SS/enterClassID_joinClass.png">
+<br><br>
+
+<h3>On Successfully Joining The Class</h3>
+<img src="SS/onSuccessfullyJoiningTheClass.png">
+<br><br>
+
+<h3>Student Performing Quiz</h3>
+<img src="SS/studentPerformingQuiz.png">
+<br><br>
+
+<h3>Student Viewing Quiz</h3>
+<img src="SS/studentViewingQuiz.png">
+<br><br>
+
+<h3>Student Performing Quiz</h3>
+<img src="SS/studentPerformingQuiz.png">
+<br><br>

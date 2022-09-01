@@ -70,10 +70,6 @@
 <img src="SS/onSuccessfullyJoiningTheClass.png">
 <br><br>
 
-<h3>Student Performing Quiz</h3>
-<img src="SS/studentPerformingQuiz.png">
-<br><br>
-
 <h3>Student Viewing Quiz</h3>
 <img src="SS/studentViewingQuiz.png">
 <br><br>
@@ -81,3 +77,5 @@
 <h3>Student Performing Quiz</h3>
 <img src="SS/studentPerformingQuiz.png">
 <br><br>
+
+
